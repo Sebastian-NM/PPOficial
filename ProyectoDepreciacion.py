@@ -378,9 +378,9 @@ def abrirVentana2():
             depreciacionAnual = (contadorPeriodo/vidaUtil) * (costoInicial-valorSalvamento)
             depreciacionAcumulada += depreciacionAnual
             valorLibros = costoInicial - depreciacionAcumulada
-            valorDolar = valorLibros * dolar
+            valorEnDolar = valorLibros * dolar
             tblDepreciacion.insert("", END, text = ano+1, values = (str(contador), str("{:,}".format(round(depreciacionAnual,2))),
-                                                                  str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2))),str(round(valorDolar))))
+                                            str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2))),str(round(valorEnDolar))))
             ano+=1
             contador+=1
             contadorPeriodo-=1
