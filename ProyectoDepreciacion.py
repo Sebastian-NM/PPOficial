@@ -231,12 +231,12 @@ def abrirVentana2():
 
       #Linea Recta Button
     btnCalcularLineaRecta = Button(vFuncion2, text = "LÍNEA RECTA", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 9",
-                                   command = tratamientoDeDatosLineaRecta).place(x=360,y = 90)
+                                   command = tratamientoDeDatosLineaRecta).place(x=360,y = 60)
 
 
     #Linea Recta Button
     btnCalcularSumaDigitos = Button(vFuncion2, text="SUMA DE DÍGITOS", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
-                                    command=tratamientoDeDatosSumaDigitos).place(x=455, y=90)
+                                    command=tratamientoDeDatosSumaDigitos).place(x=455, y=60)
 
 
     #Suma de digitos Button
@@ -246,57 +246,57 @@ def abrirVentana2():
 
     #Data labels
     lblNumeroActivo = tkinter.Label(vFuncion2, text="Número de activo:", font="Segoe 12", bg="#FFFFFF")
-    lblNumeroActivo.place(x=45, y=150)
+    lblNumeroActivo.place(x=45, y=95)
     showNumeroActivo = tkinter.Entry(vFuncion2, font="Segoe 12", bg= "#E5E5E5", state='disabled')
-    showNumeroActivo.place(x=230, y=150)
+    showNumeroActivo.place(x=230, y=95)
 
 
     lblCategoria = tkinter.Label(vFuncion2, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
-    lblCategoria.place(x=45, y=180)
+    lblCategoria.place(x=45, y=125)
     showCategoria = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showCategoria.place(x=230, y=180)
+    showCategoria.place(x=230, y=125)
 
 
     lblDetalle = tkinter.Label(vFuncion2, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
-    lblDetalle.place(x=45, y=210)
+    lblDetalle.place(x=45, y=155)
     showDetalle = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showDetalle.place(x=230, y=210)
+    showDetalle.place(x=230, y=155)
 
 
     lblValorInicial = tkinter.Label(vFuncion2, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
-    lblValorInicial.place(x=45, y=240)
+    lblValorInicial.place(x=45, y=185)
     showValorInicial = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showValorInicial.place(x=230, y=240)
+    showValorInicial.place(x=230, y=185)
 
 
     lblFechaActual = tkinter.Label(vFuncion2, text="Fecha actual:", font="Segoe 12", bg="#FFFFFF")
-    lblFechaActual.place(x=45, y=290)
+    lblFechaActual.place(x=45, y=215)
     showFechaActual = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showFechaActual.place(x=260, y=290)
+    showFechaActual.place(x=260, y=215)
 
 
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
-    lblFechaCompra.place(x=45, y=270)
+    lblFechaCompra.place(x=45, y=245)
     showFechaCompra = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showFechaCompra.place(x=230, y=270)
+    showFechaCompra.place(x=230, y=245)
 
 
     lblMoneda = tkinter.Label(vFuncion2, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
-    lblMoneda.place(x=45, y=300)   #dolares o colones
+    lblMoneda.place(x=45, y=275)   #dolares o colones
     showMoneda = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showMoneda.place(x=230, y=300)
+    showMoneda.place(x=230, y=275)
 
 
     lblValorSalvamento = tkinter.Label(vFuncion2, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
-    lblValorSalvamento.place(x=45, y=330)
+    lblValorSalvamento.place(x=45, y=305)
     showValorSalvamento = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showValorSalvamento.place(x=230, y=330)
+    showValorSalvamento.place(x=230, y=305)
 
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion2, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
-    lblPeriodoRecuperacion.place(x=45, y=360)
+    lblPeriodoRecuperacion.place(x=45, y=335)
     showPeriodoRecuperacion = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showPeriodoRecuperacion.place(x=230, y=360)
+    showPeriodoRecuperacion.place(x=230, y=335)
 
 
     #Table to show the data
@@ -352,10 +352,10 @@ def abrirVentana2():
         depreciacion = (valorInicial - valorSalvamento)/periodoRecuperacion
         valorLibros = valorInicial - depreciacion
         while (ano< int(year)):
-            tblDepreciacion.insert("",END,text = str(ano),values = (str(contador+1),str(depreciacion),str(round(tasaDepreciacion(periodoRecuperacion),10)),str("{:,}".format(valorLibros))))
             valorInicial = valorInicial - depreciacion
             valorLibros = valorInicial - depreciacion
             ValorDolar= valorLibros * determinarPrecioDolar()
+            tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros))), str(round(ValorDolar)))
             contador+=1
             ano +=1
 
