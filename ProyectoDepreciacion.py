@@ -1,10 +1,8 @@
 import tkinter
 from tkinter import *
 from tkinter import ttk
-from datetime import datetime
 from bs4 import BeautifulSoup
 import requests
-from datetime import date
 from datetime import datetime
 
 
