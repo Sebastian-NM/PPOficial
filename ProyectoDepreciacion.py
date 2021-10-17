@@ -6,8 +6,7 @@ from bs4 import BeautifulSoup
 import requests
 from datetime import date
 from datetime import datetime
-date = datetime.today()
-year = date.strftime("%Y")
+
 
 
 #===============================================================================[PRIMERA FUNCION]========================================================================================
@@ -269,10 +268,11 @@ def abrirVentana2():
     showValorInicial.place(x=230, y=185)
 
 
+    date = datetime.today()
     lblFechaActual = tkinter.Label(vFuncion2, text="Fecha actual:", font="Segoe 12", bg="#FFFFFF")
     lblFechaActual.place(x=45, y=215)
-    showFechaActual = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showFechaActual.place(x=260, y=215)
+    showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = str(date)[:10])
+    showFechaActual.place(x=230, y=215)
 
 
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
@@ -338,6 +338,8 @@ def abrirVentana2():
 
 
     def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento):
+        date = datetime.today()
+        year = date.strftime("%Y")
         tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
         tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
         tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
@@ -354,13 +356,15 @@ def abrirVentana2():
         while (ano< int(year)):
             valorInicial = valorInicial - depreciacion
             valorLibros = valorInicial - depreciacion
-            ValorDolar= valorLibros * determinarPrecioDolar()
-            tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros))), str(round(ValorDolar)))
+            valorMonedaContraria= valorLibros * determinarPrecioDolar()
+            tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria)))))
             contador+=1
             ano +=1
 
 
     def llenarTablaSumaDigitos(ano, costoInicial,periodoRecuperacion, valorSalvamento):
+        date = datetime.today()
+        year = date.strftime("%Y")
         tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
         tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
         tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
@@ -378,9 +382,9 @@ def abrirVentana2():
             depreciacionAnual = (contadorPeriodo/vidaUtil) * (costoInicial-valorSalvamento)
             depreciacionAcumulada += depreciacionAnual
             valorLibros = costoInicial - depreciacionAcumulada
-            valorEnDolar = valorLibros * dolar
+            valorEnMonedaContraria = valorLibros * dolar
             tblDepreciacion.insert("", END, text = ano+1, values = (str(contador), str("{:,}".format(round(depreciacionAnual,2))),
-                                            str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2))),str(round(valorEnDolar))))
+                                            str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2))),str("{:,}".format(round(valorEnMonedaContraria)))))
             ano+=1
             contador+=1
             contadorPeriodo-=1
