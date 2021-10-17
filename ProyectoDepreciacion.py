@@ -336,7 +336,7 @@ def abrirVentana2():
         dolar = tipoCambio[89].text
         return formatearPrecioDolar(dolar)
 
-    
+
     def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento):
         tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
         tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
