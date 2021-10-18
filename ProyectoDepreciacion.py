@@ -439,3 +439,15 @@ def abrirVentanaPrincipal():
     vLogin.mainloop()
 
 abrirVentanaPrincipal() #Invocacion
+###########FUNCION DE COMO CAMBIAR MONEDAS#####
+#def convertirColonesADolares(cantidadColones):
+    #dolaR = 631
+ #   colon = cantidadColones
+  #  dolareS = colon/dolaR
+   # return round(dolareS)
+
+#def convertirDolaresAColones(cantidadDolares):
+ #   dolAR=631
+  #  coloN = cantidadDolares * dolAR
+   # return round(coloN)
+####para usar en la funcion 2 y demas ######
