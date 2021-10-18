@@ -70,49 +70,49 @@ def abrirVentana1():
     #Data labels
     lblNumeroActivo = tkinter.Label(vFuncion1, text="Número de activo:", font="Segoe 12", bg="#FFFFFF")
     lblNumeroActivo.place(x=45, y=150)
-    showNumeroActivo = tkinter.Entry(vFuncion1, font="Segoe 12", bg= "#E5E5E5", state='disabled')
+    showNumeroActivo = tkinter.Label(vFuncion1, font="Segoe 12", bg= "#E5E5E5",height = 1, width = 20)
     showNumeroActivo.place(x=230, y=150)
 
 
     lblCategoria = tkinter.Label(vFuncion1, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
     lblCategoria.place(x=45, y=180)
-    showCategoria = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showCategoria = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5",height = 1, width = 20)
     showCategoria.place(x=230, y=180)
 
 
     lblDetalle = tkinter.Label(vFuncion1, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
     lblDetalle.place(x=45, y=210)
-    showDetalle = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showDetalle = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showDetalle.place(x=230, y=210)
 
 
     lblValorInicial = tkinter.Label(vFuncion1, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
     lblValorInicial.place(x=45, y=240)
-    showValorInicial = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showValorInicial = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showValorInicial.place(x=230, y=240)
 
 
     lblFechaCompra = tkinter.Label(vFuncion1, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
     lblFechaCompra.place(x=45, y=270)
-    showFechaCompra = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showFechaCompra = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showFechaCompra.place(x=230, y=270)
 
 
     lblMoneda = tkinter.Label(vFuncion1, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
     lblMoneda.place(x=45, y=300)
-    showMoneda = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showMoneda = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showMoneda.place(x=230, y=300)
 
 
     lblValorSalvamento = tkinter.Label(vFuncion1, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
     lblValorSalvamento.place(x=45, y=330)
-    showValorSalvamento = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showValorSalvamento = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showValorSalvamento.place(x=230, y=330)
 
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion1, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
     lblPeriodoRecuperacion.place(x=45, y=360)
-    showPeriodoRecuperacion = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled')
+    showPeriodoRecuperacion = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
     showPeriodoRecuperacion.place(x=230, y=360)
 
 
@@ -204,19 +204,19 @@ def abrirVentana2():
 
     #Label to choose the method
     lblSeleccionarMetodo = tkinter.Label(vFuncion2, text = "Seleccione el método de depreciación:",font = "Segoe 13", bg  = "#FFFFFF")
-    lblSeleccionarMetodo.place(x=45,y=80)
-
-
-    #Label to explain the combobox
-    lblEscogerCodigo = tkinter.Label(vFuncion2, text="Seleccione el código de activo a mostrar:", font="Segoe 13", bg="#FFFFFF")
-    lblEscogerCodigo.place(x=45,y=40)
+    lblSeleccionarMetodo.place(x=45,y=60)
 
 
     #Codes Combo box
     cmbCodigosDisponibles = ttk.Combobox(vFuncion2, values=["1","2","3","4","5","6","7"],state="readonly")
     cmbCodigosDisponibles.grid(column=0, row=1)
     cmbCodigosDisponibles.current(0)
-    cmbCodigosDisponibles.place(x=360,y=48)
+    cmbCodigosDisponibles.place(x=360,y=21)
+
+
+    #Label to explain the combobox
+    lblEscogerCodigo = tkinter.Label(vFuncion2, text="Seleccione el código de activo a mostrar:", font="Segoe 13", bg="#FFFFFF")
+    lblEscogerCodigo.place(x=45,y=20)
 
 
     def tratamientoDeDatosLineaRecta():
@@ -228,73 +228,79 @@ def abrirVentana2():
 
       #Linea Recta Button
     btnCalcularLineaRecta = Button(vFuncion2, text = "LÍNEA RECTA", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 9",
-                                   command = tratamientoDeDatosLineaRecta).place(x=360,y = 60)
+                                   command = tratamientoDeDatosLineaRecta).place(x=360,y = 61)
 
 
-    #Linea Recta Button
+    #Suma Digitos Button
     btnCalcularSumaDigitos = Button(vFuncion2, text="SUMA DE DÍGITOS", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
-                                    command=tratamientoDeDatosSumaDigitos).place(x=455, y=60)
+                                    command=tratamientoDeDatosSumaDigitos).place(x=455, y=61)
 
 
-    #Suma de digitos Button
+    #Label Tabla
     lblTituloTabla = tkinter.Label(vFuncion2, text = "Tabla de proyección de depreciación anual", bg  = "#FFFFFF", font = 13,fg = "#1E56A0")
     lblTituloTabla.place(x=45,y=395)
 
 
     #Data labels
     lblNumeroActivo = tkinter.Label(vFuncion2, text="Número de activo:", font="Segoe 12", bg="#FFFFFF")
-    lblNumeroActivo.place(x=45, y=95)
-    showNumeroActivo = tkinter.Entry(vFuncion2, font="Segoe 12", bg= "#E5E5E5", state='disabled')
-    showNumeroActivo.place(x=230, y=95)
+    lblNumeroActivo.place(x=45, y=105)
+    showNumeroActivo = tkinter.Label(vFuncion2, font="Segoe 12", bg= "#E5E5E5", height = 1, width = 20)
+    showNumeroActivo.place(x=230, y=105)
 
 
     lblCategoria = tkinter.Label(vFuncion2, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
-    lblCategoria.place(x=45, y=125)
-    showCategoria = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showCategoria.place(x=230, y=125)
+    lblCategoria.place(x=45, y=135)
+    showCategoria = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showCategoria.place(x=230, y=135)
 
 
     lblDetalle = tkinter.Label(vFuncion2, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
-    lblDetalle.place(x=45, y=155)
-    showDetalle = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showDetalle.place(x=230, y=155)
+    lblDetalle.place(x=45, y=165)
+    showDetalle = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showDetalle.place(x=230, y=165)
 
 
     lblValorInicial = tkinter.Label(vFuncion2, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
-    lblValorInicial.place(x=45, y=185)
-    showValorInicial = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showValorInicial.place(x=230, y=185)
+    lblValorInicial.place(x=45, y=195)
+    showValorInicial = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorInicial.place(x=230, y=195)
 
 
     date = datetime.today()
+
+
+    def formatoInversoFecha(fecha):
+        return fecha[8:] + "-" + fecha[5:7] + "-" + fecha[0:4]
+
+
     lblFechaActual = tkinter.Label(vFuncion2, text="Fecha actual:", font="Segoe 12", bg="#FFFFFF")
-    lblFechaActual.place(x=45, y=215)
-    showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = str(date)[:10])
-    showFechaActual.place(x=230, y=215)
+    lblFechaActual.place(x=45, y=225)
+    showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = formatoInversoFecha(str(date)[:10]), height = 1, width = 20)
+    showFechaActual.place(x=230, y=225)
 
 
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
-    lblFechaCompra.place(x=45, y=245)
-    showFechaCompra = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showFechaCompra.place(x=230, y=245)
+    lblFechaCompra.place(x=45, y=255)
+    showFechaCompra = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showFechaCompra.place(x=230, y=255)
 
 
     lblMoneda = tkinter.Label(vFuncion2, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
-    lblMoneda.place(x=45, y=275)   #dolares o colones
-    showMoneda = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showMoneda.place(x=230, y=275)
+    lblMoneda.place(x=45, y=285)   #dolares o colones
+    showMoneda = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showMoneda.place(x=230, y=285)
 
 
     lblValorSalvamento = tkinter.Label(vFuncion2, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
-    lblValorSalvamento.place(x=45, y=305)
-    showValorSalvamento = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showValorSalvamento.place(x=230, y=305)
+    lblValorSalvamento.place(x=45, y=315)
+    showValorSalvamento = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorSalvamento.place(x=230, y=315)
 
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion2, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
-    lblPeriodoRecuperacion.place(x=45, y=335)
-    showPeriodoRecuperacion = tkinter.Entry(vFuncion2, font="Segoe 12", bg="#E5E5E5", state='disabled')
-    showPeriodoRecuperacion.place(x=230, y=335)
+    lblPeriodoRecuperacion.place(x=45, y=345)
+    showPeriodoRecuperacion = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showPeriodoRecuperacion.place(x=230, y=345)
 
 
     #Table to show the data
