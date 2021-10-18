@@ -349,7 +349,7 @@ def abrirVentana2():
         tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
         tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
         tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.heading("col5", text="Tipo de Cambio", anchor=CENTER) #dolar
+        tblDepreciacion.heading("col5", text="Moneda Contraria", anchor=CENTER) #dolar
         tblDepreciacion.place(x=50, y=430)
         tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
 
@@ -374,24 +374,24 @@ def abrirVentana2():
         tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
         tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
         tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.heading("col5", text="Tipo de Cambio", anchor=CENTER)
+        tblDepreciacion.heading("col5", text="Moneda Contraria", anchor=CENTER)
         tblDepreciacion.place(x=50, y=430)
         tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
         vidaUtil = determinarVidaUtil(periodoRecuperacion)
         contador = 1
         contadorPeriodo = periodoRecuperacion
         depreciacionAcumulada = 0
-        dolar = 631
-        while (ano < int(year)):
-            depreciacionAnual = (contadorPeriodo/vidaUtil) * (costoInicial-valorSalvamento)
+       # dolar=631
+        while(ano < int(year)):
+            depreciacionAnual=(contadorPeriodo / vidaUtil) *(costoInicial - valorSalvamento)
             depreciacionAcumulada += depreciacionAnual
             valorLibros = costoInicial - depreciacionAcumulada
-            valorEnMonedaContraria = valorLibros * dolar
-            tblDepreciacion.insert("", END, text = ano+1, values = (str(contador), str("{:,}".format(round(depreciacionAnual,2))),
-                                            str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2))),str("{:,}".format(round(valorEnMonedaContraria)))))
-            ano+=1
-            contador+=1
-            contadorPeriodo-=1
+            valorEnMonedaContraria= valorLibros * determinarPrecioDolar()
+            tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorEnMonedaContraria)))))
+            ano +=1
+            contador +=1
+            contadorPeriodo +=1
+
 
 
 #===============================================================================[VENTANA PRINCIPAL]========================================================================================
