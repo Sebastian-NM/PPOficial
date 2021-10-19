@@ -552,9 +552,7 @@ def abrirVentana2():
                     valorMonedaContraria = valorLibros * determinarPrecioDolar()
 
                 if depreciacionAnual == 0:
-                    print("Entro")
                     while ano < int(anoActual)-1:
-                        print("Vuelta")
                         tblDepreciacion.insert("", END, text=ano + 1, values=(str(contador),
                                                                               str("{:,}".format(
                                                                                   round(depreciacionAnual, 2))),
