@@ -368,6 +368,7 @@ def abrirVentana2():
         llenarTablaSumaDigitos(int(ano),int(valorInicial),int(periodoRecuperacion),int(valorSalvamento),moneda)
 
 
+
       #Linea Recta Button
     btnCalcularLineaRecta = Button(vFuncion2, text = "LÍNEA RECTA", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 9",
                                    command = tratamientoDeDatosLineaRecta).place(x=360,y = 61)
@@ -496,18 +497,18 @@ def abrirVentana2():
             tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
             tituloTable.set("Tabla de proyección de depreciación")
             lblTituloTabla.config(fg="#1E56A0")
-
+            ano += 1
             contador = 0
             vidaUtil = determinarVidaUtil(periodoRecuperacion)
-            depreciacion = (valorInicial - valorSalvamento)/periodoRecuperacion
+            depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
             valorLibros = valorInicial - depreciacion
-            while (ano< int(anoActual)):
+            while (ano <= int(anoActual)):
                 valorInicial = valorInicial - depreciacion
                 valorLibros = valorInicial - depreciacion
                 if (moneda == "Colones"):
-                    valorMonedaContraria = valorLibros * determinarPrecioDolar()
-                else:
                     valorMonedaContraria = valorLibros / determinarPrecioDolar()
+                else:
+                    valorMonedaContraria = valorLibros * determinarPrecioDolar()
                 tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria,2)))))
                 contador+=1
                 ano +=1
@@ -546,13 +547,35 @@ def abrirVentana2():
                 depreciacionAcumulada += depreciacionAnual
                 valorLibros = costoInicial - depreciacionAcumulada
                 if(moneda == "Colones"):
-                    valorMonedaContraria= valorLibros * determinarPrecioDolar()
+                    valorMonedaContraria= valorLibros / determinarPrecioDolar()
                 else:
-                    valorMonedaContraria = valorLibros / determinarPrecioDolar()
-                tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorMonedaContraria,2)))))
+                    valorMonedaContraria = valorLibros * determinarPrecioDolar()
+
+                if depreciacionAnual == 0:
+                    print("Entro")
+                    while ano < int(anoActual)-1:
+                        print("Vuelta")
+                        tblDepreciacion.insert("", END, text=ano + 1, values=(str(contador),
+                                                                              str("{:,}".format(
+                                                                                  round(depreciacionAnual, 2))),
+                                                                              str("{:,}".format(
+                                                                                  round(depreciacionAcumulada, 2))),
+                                                                              str("{:,}".format(round(
+                                                                                  costoInicial - depreciacionAcumulada,
+                                                                                  2))),
+                                                                              str("{:,}".format(
+                                                                                  round(valorMonedaContraria, 2)))))
+                        ano+=1
+                        contador+=1
+
+                tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),
+                                                                       str("{:,}". format(round(depreciacionAnual, 2))),
+                                                                       str("{:,}".format(round(depreciacionAcumulada, 2))),
+                                                                       str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),
+                                                                       str("{:,}".format (round(valorMonedaContraria,2)))))
                 ano +=1
                 contador +=1
-                contadorPeriodo +=1
+                contadorPeriodo -=1
 
 
 
@@ -601,18 +624,3 @@ def abrirVentanaPrincipal():
     vLogin.mainloop()
 
 abrirVentanaPrincipal()
-
-
-#Invocacion
-###########FUNCION DE COMO CAMBIAR MONEDAS#####
-#def convertirColonesADolares(cantidadColones):
-    #dolaR = 631
- #   colon = cantidadColones
-  #  dolareS = colon/dolaR
-   # return round(dolareS)
-
-#def convertirDolaresAColones(cantidadDolares):
- #   dolAR=631
-  #  coloN = cantidadDolares * dolAR
-   # return round(coloN)
-####para usar en la funcion 2 y demas ######
