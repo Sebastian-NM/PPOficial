@@ -480,6 +480,10 @@ def abrirVentana2():
             tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
             lblTituloTabla.config(fg = "#B4092D", font = 'bold')
         else:
+            if (moneda == "Colones"):
+                tituloMoneda = "Dólares"
+            else:
+                tituloMoneda = "Colones"
             fecha = datetime.today()
             anoActual = fecha.strftime("%Y")
             tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
@@ -487,7 +491,7 @@ def abrirVentana2():
             tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
             tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
             tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-            tblDepreciacion.heading("col5", text = moneda, anchor=CENTER) #dolar
+            tblDepreciacion.heading("col5", text = tituloMoneda, anchor=CENTER) #dolar
             tblDepreciacion.place(x=50, y=430)
             tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
             tituloTable.set("Tabla de proyección de depreciación")
@@ -500,8 +504,11 @@ def abrirVentana2():
             while (ano< int(anoActual)):
                 valorInicial = valorInicial - depreciacion
                 valorLibros = valorInicial - depreciacion
-                valorMonedaContraria= valorLibros * determinarPrecioDolar()
-                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria)))))
+                if (moneda == "Colones"):
+                    valorMonedaContraria = valorLibros * determinarPrecioDolar()
+                else:
+                    valorMonedaContraria = valorLibros / determinarPrecioDolar()
+                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria,2)))))
                 contador+=1
                 ano +=1
 
@@ -512,6 +519,11 @@ def abrirVentana2():
             tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
             lblTituloTabla.config(fg = "#B4092D", font = 'bold')
         else:
+            if (moneda == "Colones"):
+                tituloMoneda = "Dólares"
+            else:
+                tituloMoneda = "Colones"
+
             fecha = datetime.today()
             anoActual = fecha.strftime("%Y")
             tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
@@ -519,7 +531,7 @@ def abrirVentana2():
             tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
             tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
             tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-            tblDepreciacion.heading("col5", text= moneda, anchor=CENTER)
+            tblDepreciacion.heading("col5", text= tituloMoneda, anchor=CENTER)
             tblDepreciacion.place(x=50, y=430)
             tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
             tituloTable.set("Tabla de proyección de depreciación")
@@ -533,8 +545,11 @@ def abrirVentana2():
                 depreciacionAnual=(contadorPeriodo / vidaUtil) * (costoInicial - valorSalvamento)
                 depreciacionAcumulada += depreciacionAnual
                 valorLibros = costoInicial - depreciacionAcumulada
-                valorEnMonedaContraria= valorLibros * determinarPrecioDolar()
-                tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorEnMonedaContraria)))))
+                if(moneda == "Colones"):
+                    valorMonedaContraria= valorLibros * determinarPrecioDolar()
+                else:
+                    valorMonedaContraria = valorLibros / determinarPrecioDolar()
+                tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorMonedaContraria,2)))))
                 ano +=1
                 contador +=1
                 contadorPeriodo +=1
