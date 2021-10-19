@@ -4,183 +4,254 @@ from tkinter import ttk
 from bs4 import BeautifulSoup
 import requests
 from datetime import datetime
-
+import pandas as pd
 
 
 #===============================================================================[PRIMERA FUNCION]========================================================================================
 
 def abrirVentana1():
-    #Window properties
+    # Window properties
     vFuncion1 = Toplevel()
     vFuncion1.title("Depreciación Lineal")
     anchoVLogin = 1100
     altoVLogin = 800
-    xPosicion = vFuncion1.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
-    yPosicion = vFuncion1.winfo_screenheight() // 2 - altoVLogin // 2 #Posicionar ventana en centro de la pantalla
+    xPosicion = vFuncion1.winfo_screenwidth() // 2 - anchoVLogin // 2  # Posicionar ventana en centro de la pantalla
+    yPosicion = vFuncion1.winfo_screenheight() // 2 - altoVLogin // 2  # Posicionar ventana en centro de la pantalla
     posicionPantalla = str(anchoVLogin) + "x" + str(altoVLogin) + "+" + str(xPosicion) + "+" + str(yPosicion)
     vFuncion1.geometry(posicionPantalla)
     vFuncion1['bg'] = '#FFFFFF'
-    vFuncion1.resizable(0,0)
+    vFuncion1.resizable(0, 0)
 
+    # Go back button
+    btnCalcularLineaRecta = Button(vFuncion1, text="VOLVER", fg="#FFFFFF", bg="#1E56A0", font="Segoe 10 bold",
+                                   command=vFuncion1.destroy).place(x=50, y=700)
+    # nombreVentana,nombreBoton, font, fondo, font = "tamano letra", command = funcionalidad que va a tener
 
-    #Go back button
-    btnCalcularLineaRecta = Button(vFuncion1, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion1.destroy).place(x=50,y=700)
-    #nombreVentana,nombreBoton, font, fondo, font = "tamano letra", command = funcionalidad que va a tener
+    # Label to choose the method
+    lblSeleccionarMetodo = tkinter.Label(vFuncion1, text="Seleccione el método de depreciación:", font="Segoe 13",
+                                         bg="#FFFFFF")
+    lblSeleccionarMetodo.place(x=45, y=90)
 
-
-    #Label to choose the method
-    lblSeleccionarMetodo = tkinter.Label(vFuncion1, text = "Seleccione el método de depreciación:",font = "Segoe 13", bg  = "#FFFFFF")
-    lblSeleccionarMetodo.place(x=45,y=90)
-
-
-    #Label to explain the combobox
+    # Label to explain the combobox
     lblEscogerCodigo = Label(vFuncion1, text="Seleccione el código de activo a mostrar:", font="Segoe 13", bg="#FFFFFF")
-    lblEscogerCodigo.place(x=45,y=45)
+    lblEscogerCodigo.place(x=45, y=45)
 
+    #Function that fills the combo box with the codes
+    def crearListaComboBox():
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        lista = []
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            lista.append(int(cuadroInformacion[0][indice]))
+            indice += 1
+        return lista
 
-    #Codes Combo box
-    cmbCodigosDisponibles = ttk.Combobox(vFuncion1, values=["1","2","3","4","5","6","7"],state="readonly")
+    #Function that searches the selected code in the rows in the matrix
+    def encontrarProducto(codigo):
+        archivo = pd.read_html("datos.html")
+        indice = 1
+        cuadroInformacion = archivo[0]
+        while indice < archivo[0].shape[0]:
+            if int(cuadroInformacion[0][indice]) == codigo:
+                return indice
+            indice += 1
+        return -1
+
+    # Codes Combo box
+    cmbCodigosDisponibles = ttk.Combobox(vFuncion1, values=crearListaComboBox(), state="readonly")
     cmbCodigosDisponibles.grid(column=0, row=1)
     cmbCodigosDisponibles.current(0)
-    cmbCodigosDisponibles.place(x=360,y=48)
-
-
+    cmbCodigosDisponibles.place(x=360, y=48)
+    texto = StringVar()
+    texto2 = StringVar()
+    texto3 = StringVar()
+    texto4 = StringVar()
+    texto5 = StringVar()
+    texto6 = StringVar()
+    texto7 = StringVar()
+    texto8 = StringVar()
     def tratamientoDeDatosLineaRecta():
-        llenarTablaLineaRecta(2019,6,7689300,450000)
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        numeroActivo = cuadroInformacion[0][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto.set(numeroActivo)
+        categoria = cuadroInformacion[1][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto2.set(categoria)
+        nombre = cuadroInformacion[2][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto3.set(nombre)
+        valorInicial = cuadroInformacion[3][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto4.set("{:,}".format(int(valorInicial)))
+        fechaDeCompra = cuadroInformacion[4][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto5.set(fechaDeCompra)
+        moneda = cuadroInformacion[5][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto6.set(moneda)
+        valorSalvamento = cuadroInformacion[6][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto7.set("{:,}".format(int(valorSalvamento)))
+        periodoRecuperacion = cuadroInformacion[7][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto8.set(periodoRecuperacion)
+        ano = fechaDeCompra[6:]
+        llenarTablaLineaRecta(int(ano), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento))
+
 
     def tratamientoDeDatosSumaDigitos():
-        llenarTablaSumaDigitos(2019,7689300,6,450000)
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        numeroActivo = cuadroInformacion[0][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto.set(numeroActivo)
+        categoria = cuadroInformacion[1][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto2.set(categoria)
+        nombre = cuadroInformacion[2][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto3.set(nombre)
+        valorInicial = cuadroInformacion[3][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto4.set("{:,}".format(int(valorInicial)))
+        fechaDeCompra = cuadroInformacion[4][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto5.set(fechaDeCompra)
+        moneda = cuadroInformacion[5][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto6.set(moneda)
+        valorSalvamento = cuadroInformacion[6][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto7.set("{:,}".format(int(valorSalvamento)))
+        periodoRecuperacion = cuadroInformacion[7][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto8.set(periodoRecuperacion)
+        ano = fechaDeCompra[6:]
+        llenarTablaSumaDigitos(int(ano), int(valorInicial), int(periodoRecuperacion), int(valorSalvamento))
 
+    # Linea Recta Button
+    btnCalcularLineaRecta = Button(vFuncion1, text="LÍNEA RECTA", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
+                                   command=tratamientoDeDatosLineaRecta).place(x=360, y=90)
 
-    #Linea Recta Button
-    btnCalcularLineaRecta = Button(vFuncion1, text = "LÍNEA RECTA", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 9",
-                                   command = tratamientoDeDatosLineaRecta).place(x=360,y = 90)
-
-
-    #Linea Recta Button
+    # Linea Recta Button
     btnCalcularSumaDigitos = Button(vFuncion1, text="SUMA DE DÍGITOS", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
-                                   command=tratamientoDeDatosSumaDigitos).place(x=455, y=90)
+                                    command=tratamientoDeDatosSumaDigitos).place(x=455, y=90)
 
+    #Label for title of the table
+    tituloTable = StringVar()
+    tituloTable.set("Tabla de proyección de depreciación anual")
+    lblTituloTabla = tkinter.Label(vFuncion1, textvariable = tituloTable, bg="#FFFFFF", font=13, fg="#1E56A0")
+    lblTituloTabla.place(x=45, y=395)
 
-    #Suma de digitos Button
-    lblTituloTabla = tkinter.Label(vFuncion1, text = "Tabla de proyección de depreciación anual", bg  = "#FFFFFF", font = 13,fg = "#1E56A0")
-    lblTituloTabla.place(x=45,y=395)
-
-
-    #Data labels
-    lblNumeroActivo = tkinter.Label(vFuncion1, text="Número de activo:", font="Segoe 12", bg="#FFFFFF")
+    # Data labels
+    lblNumeroActivo = tkinter.Label(vFuncion1, text="Código de activo:", font="Segoe 12", bg="#FFFFFF")
     lblNumeroActivo.place(x=45, y=150)
-    showNumeroActivo = tkinter.Label(vFuncion1, font="Segoe 12", bg= "#E5E5E5",height = 1, width = 20)
+    showNumeroActivo = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto, width = 40)
     showNumeroActivo.place(x=230, y=150)
-
 
     lblCategoria = tkinter.Label(vFuncion1, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
     lblCategoria.place(x=45, y=180)
-    showCategoria = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5",height = 1, width = 20)
+    showCategoria = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto2, width = 40)
     showCategoria.place(x=230, y=180)
-
 
     lblDetalle = tkinter.Label(vFuncion1, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
     lblDetalle.place(x=45, y=210)
-    showDetalle = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showDetalle = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto3, width = 40)
     showDetalle.place(x=230, y=210)
-
 
     lblValorInicial = tkinter.Label(vFuncion1, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
     lblValorInicial.place(x=45, y=240)
-    showValorInicial = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorInicial = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto4, width = 40)
     showValorInicial.place(x=230, y=240)
-
 
     lblFechaCompra = tkinter.Label(vFuncion1, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
     lblFechaCompra.place(x=45, y=270)
-    showFechaCompra = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showFechaCompra = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto5, width = 40)
     showFechaCompra.place(x=230, y=270)
-
 
     lblMoneda = tkinter.Label(vFuncion1, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
     lblMoneda.place(x=45, y=300)
-    showMoneda = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showMoneda = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto6, width = 40)
     showMoneda.place(x=230, y=300)
-
 
     lblValorSalvamento = tkinter.Label(vFuncion1, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
     lblValorSalvamento.place(x=45, y=330)
-    showValorSalvamento = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorSalvamento = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto7, width = 40)
     showValorSalvamento.place(x=230, y=330)
-
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion1, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
     lblPeriodoRecuperacion.place(x=45, y=360)
-    showPeriodoRecuperacion = tkinter.Label(vFuncion1, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showPeriodoRecuperacion = tkinter.Entry(vFuncion1, font="Segoe 12", bg="#E5E5E5", state='disabled',textvariable = texto8, width = 40)
     showPeriodoRecuperacion.place(x=230, y=360)
 
-
-    #Table to show the data
-    tblDepreciacion = ttk.Treeview(vFuncion1, columns = ("col1","col2","col3","col4")) #Anadir mas columnas
-    tblDepreciacion.column("#0",width= 100)
-    tblDepreciacion.column("col1",width=100)
+    # Table to show the data
+    tblDepreciacion = ttk.Treeview(vFuncion1, columns=("col1", "col2", "col3", "col4"))  # Anadir mas columnas
+    tblDepreciacion.column("#0", width=100)
+    tblDepreciacion.column("col1", width=100)
     tblDepreciacion.column("col2", width=150)
     tblDepreciacion.column("col3", width=150)
     tblDepreciacion.column("col4", width=150)
-
 
     def determinarVidaUtil(periodoRecuperacion):
         vidaUtil = periodoRecuperacion * (periodoRecuperacion + 1) // 2
         return vidaUtil
 
-
     def tasaDepreciacion(periodoRecuperacion):
         tasaDepreciacion = 1 / periodoRecuperacion
         return tasaDepreciacion
 
+    def llenarTablaLineaRecta(ano, periodoRecuperacion, valorInicial, valorSalvamento):
+        if periodoRecuperacion == 0:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
+            lblTituloTabla.config(fg = "#B4092D", font = 'bold')
+        else:
+            tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
+            tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
+            tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
+            tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
+            tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
+            tblDepreciacion.place(x=50, y=430)
+            tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
+            tituloTable.set("Tabla de proyección de depreciación")
+            lblTituloTabla.config(fg="#1E56A0")
 
-    def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento):
-        tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
-        tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
-        tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
-        tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
-        tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.place(x=50, y=430)
-        tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
-
-        ano += 1
-        contador = 0
-        vidaUtil = determinarVidaUtil(periodoRecuperacion)
-        depreciacion = (valorInicial - valorSalvamento)/periodoRecuperacion
-        valorLibros = valorInicial - depreciacion
-        while contador < periodoRecuperacion:
-            tblDepreciacion.insert("",END,text = str(ano),values = (str(contador+1),str(depreciacion),str(round(tasaDepreciacion(periodoRecuperacion),10)),str("{:,}".format(valorLibros))))
-            valorInicial = valorInicial - depreciacion
+            ano += 1
+            contador = 0
+            vidaUtil = determinarVidaUtil(periodoRecuperacion)
+            depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
             valorLibros = valorInicial - depreciacion
-            contador+=1
-            ano +=1
+            while contador < periodoRecuperacion:
+                tblDepreciacion.insert("", END, text=str(ano), values=(
+                str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),
+                str("{:,}".format(valorLibros))))
+                valorInicial = valorInicial - depreciacion
+                valorLibros = valorInicial - depreciacion
+                contador += 1
+                ano += 1
 
+    def llenarTablaSumaDigitos(ano, costoInicial, periodoRecuperacion, valorSalvamento):
+        if periodoRecuperacion == 0:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
+            lblTituloTabla.config(fg = "#B4092D")
+        else:
+            tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
+            tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
+            tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
+            tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
+            tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
+            tblDepreciacion.place(x=50, y=430)
+            tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
+            tituloTable.set("Tabla de proyección de depreciación")
+            lblTituloTabla.config(fg="#1E56A0")
 
-    def llenarTablaSumaDigitos(ano, costoInicial,periodoRecuperacion, valorSalvamento):
-        tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
-        tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
-        tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
-        tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
-        tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.place(x=50, y=430)
-        tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
-        vidaUtil = determinarVidaUtil(periodoRecuperacion)
-        contador = 1
-        contadorPeriodo = periodoRecuperacion
-        depreciacionAcumulada = 0
-        while contador <= periodoRecuperacion:
-            depreciacionAnual = (contadorPeriodo/vidaUtil) * (costoInicial-valorSalvamento)
-            depreciacionAcumulada += depreciacionAnual
-            valorLibros = costoInicial - depreciacionAcumulada
-            tblDepreciacion.insert("", END, text = ano+1, values = (str(contador), str("{:,}".format(round(depreciacionAnual,2))),
-                                                                  str("{:,}".format(round(depreciacionAcumulada,2))), str("{:,}".format(round(costoInicial-depreciacionAcumulada,2)))))
-            ano+=1
-            contador+=1
-            contadorPeriodo-=1
+            vidaUtil = determinarVidaUtil(periodoRecuperacion)
+            contador = 1
+            contadorPeriodo = periodoRecuperacion
+            depreciacionAcumulada = 0
+            while contador <= periodoRecuperacion:
+                depreciacionAnual = (contadorPeriodo / vidaUtil) * (costoInicial - valorSalvamento)
+                depreciacionAcumulada += depreciacionAnual
+                valorLibros = costoInicial - depreciacionAcumulada
+                tblDepreciacion.insert("", END, text=ano + 1,
+                                       values=(str(contador), str("{:,}".format(round(depreciacionAnual, 2))),
+                                               str("{:,}".format(round(depreciacionAcumulada, 2))),
+                                               str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2)))))
+                ano += 1
+                contador += 1
+                contadorPeriodo -= 1
 
 
 #===============================================================================[SEGUNDA FUNCION]========================================================================================
+
 
 def abrirVentana2():
 
@@ -207,11 +278,16 @@ def abrirVentana2():
     lblSeleccionarMetodo.place(x=45,y=60)
 
 
-    #Codes Combo box
-    cmbCodigosDisponibles = ttk.Combobox(vFuncion2, values=["1","2","3","4","5","6","7"],state="readonly")
-    cmbCodigosDisponibles.grid(column=0, row=1)
-    cmbCodigosDisponibles.current(0)
-    cmbCodigosDisponibles.place(x=360,y=21)
+    # Function that fills the combo box with the codes
+    def crearListaComboBox():
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        lista = []
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            lista.append(int(cuadroInformacion[0][indice]))
+            indice += 1
+        return lista
 
 
     #Label to explain the combobox
@@ -219,11 +295,58 @@ def abrirVentana2():
     lblEscogerCodigo.place(x=45,y=20)
 
 
+    # Function that searches the selected code in the rows in the matrix
+    def encontrarProducto(codigo):
+        archivo = pd.read_html("datos.html")
+        indice = 1
+        cuadroInformacion = archivo[0]
+        while indice < archivo[0].shape[0]:
+            if int(cuadroInformacion[0][indice]) == codigo:
+                return indice
+            indice += 1
+        return -1
+
+
+    # Codes Combo box
+    cmbCodigosDisponibles = ttk.Combobox(vFuncion2, values=crearListaComboBox(), state="readonly")
+    cmbCodigosDisponibles.grid(column=0, row=1)
+    cmbCodigosDisponibles.current(0)
+    cmbCodigosDisponibles.place(x=360, y=21)
+    texto = StringVar()
+    texto2 = StringVar()
+    texto3 = StringVar()
+    texto4 = StringVar()
+    texto5 = StringVar()
+    texto6 = StringVar()
+    texto7 = StringVar()
+    texto8 = StringVar()
+
+
     def tratamientoDeDatosLineaRecta():
-        llenarTablaLineaRecta(2019,6,7689300,450000)
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        numeroActivo = cuadroInformacion[0][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto.set(numeroActivo)
+        categoria = cuadroInformacion[1][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto2.set(categoria)
+        nombre = cuadroInformacion[2][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto3.set(nombre)
+        valorInicial = cuadroInformacion[3][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto4.set("{:,}".format(int(valorInicial)))
+        fechaDeCompra = cuadroInformacion[4][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto5.set(fechaDeCompra)
+        moneda = cuadroInformacion[5][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto6.set(moneda)
+        valorSalvamento = cuadroInformacion[6][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto7.set("{:,}".format(int(valorSalvamento)))
+        periodoRecuperacion = cuadroInformacion[7][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto8.set(periodoRecuperacion)
+        ano = fechaDeCompra[6:]
+        llenarTablaLineaRecta(int(ano), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento))
+
 
     def tratamientoDeDatosSumaDigitos():
-         llenarTablaSumaDigitos(2019,7689300,6,450000)
+         llenarTablaSumaDigitos(2015,7689300,6,450000)
 
 
       #Linea Recta Button
@@ -244,62 +367,55 @@ def abrirVentana2():
     #Data labels
     lblNumeroActivo = tkinter.Label(vFuncion2, text="Número de activo:", font="Segoe 12", bg="#FFFFFF")
     lblNumeroActivo.place(x=45, y=105)
-    showNumeroActivo = tkinter.Label(vFuncion2, font="Segoe 12", bg= "#E5E5E5", height = 1, width = 20)
+    showNumeroActivo = tkinter.Label(vFuncion2, font="Segoe 12", bg= "#E5E5E5", height = 1, textvariable = texto, width = 40)
     showNumeroActivo.place(x=230, y=105)
-
 
     lblCategoria = tkinter.Label(vFuncion2, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
     lblCategoria.place(x=45, y=135)
-    showCategoria = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showCategoria = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto2, width = 40)
     showCategoria.place(x=230, y=135)
-
 
     lblDetalle = tkinter.Label(vFuncion2, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
     lblDetalle.place(x=45, y=165)
-    showDetalle = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showDetalle = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto3, width = 40)
     showDetalle.place(x=230, y=165)
-
 
     lblValorInicial = tkinter.Label(vFuncion2, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
     lblValorInicial.place(x=45, y=195)
-    showValorInicial = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorInicial = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto4, width = 40)
     showValorInicial.place(x=230, y=195)
 
-
     date = datetime.today()
-
-
     def formatoInversoFecha(fecha):
         return fecha[8:] + "-" + fecha[5:7] + "-" + fecha[0:4]
 
-
     lblFechaActual = tkinter.Label(vFuncion2, text="Fecha actual:", font="Segoe 12", bg="#FFFFFF")
     lblFechaActual.place(x=45, y=225)
-    showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = formatoInversoFecha(str(date)[:10]), height = 1, width = 20)
+    showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = formatoInversoFecha(str(date)[:10]), height = 1, width = 40)
     showFechaActual.place(x=230, y=225)
 
 
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
     lblFechaCompra.place(x=45, y=255)
-    showFechaCompra = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showFechaCompra = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto5, width = 40)
     showFechaCompra.place(x=230, y=255)
 
 
     lblMoneda = tkinter.Label(vFuncion2, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
     lblMoneda.place(x=45, y=285)   #dolares o colones
-    showMoneda = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showMoneda = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto6, width = 40)
     showMoneda.place(x=230, y=285)
 
 
     lblValorSalvamento = tkinter.Label(vFuncion2, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
     lblValorSalvamento.place(x=45, y=315)
-    showValorSalvamento = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showValorSalvamento = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto7, width = 40)
     showValorSalvamento.place(x=230, y=315)
 
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion2, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
     lblPeriodoRecuperacion.place(x=45, y=345)
-    showPeriodoRecuperacion = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, width = 20)
+    showPeriodoRecuperacion = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto8, width = 40)
     showPeriodoRecuperacion.place(x=230, y=345)
 
 
@@ -381,7 +497,6 @@ def abrirVentana2():
         contador = 1
         contadorPeriodo = periodoRecuperacion
         depreciacionAcumulada = 0
-       # dolar=631
         while(ano < int(year)):
             depreciacionAnual=(contadorPeriodo / vidaUtil) *(costoInicial - valorSalvamento)
             depreciacionAcumulada += depreciacionAnual
@@ -438,7 +553,10 @@ def abrirVentanaPrincipal():
     #Invocator
     vLogin.mainloop()
 
-abrirVentanaPrincipal() #Invocacion
+abrirVentanaPrincipal()
+
+
+#Invocacion
 ###########FUNCION DE COMO CAMBIAR MONEDAS#####
 #def convertirColonesADolares(cantidadColones):
     #dolaR = 631
