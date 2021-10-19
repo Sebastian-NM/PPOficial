@@ -342,11 +342,30 @@ def abrirVentana2():
         periodoRecuperacion = cuadroInformacion[7][encontrarProducto(int(cmbCodigosDisponibles.get()))]
         texto8.set(periodoRecuperacion)
         ano = fechaDeCompra[6:]
-        llenarTablaLineaRecta(int(ano), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento))
+        llenarTablaLineaRecta(int(ano), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento), str(moneda))
 
 
     def tratamientoDeDatosSumaDigitos():
-         llenarTablaSumaDigitos(2015,7689300,6,450000)
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        numeroActivo = cuadroInformacion[0][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto.set(numeroActivo)
+        categoria = cuadroInformacion[1][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto2.set(categoria)
+        nombre = cuadroInformacion[2][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto3.set(nombre)
+        valorInicial = cuadroInformacion[3][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto4.set("{:,}".format(int(valorInicial)))
+        fechaDeCompra = cuadroInformacion[4][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto5.set(fechaDeCompra)
+        moneda = cuadroInformacion[5][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto6.set(moneda)
+        valorSalvamento = cuadroInformacion[6][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto7.set("{:,}".format(int(valorSalvamento)))
+        periodoRecuperacion = cuadroInformacion[7][encontrarProducto(int(cmbCodigosDisponibles.get()))]
+        texto8.set(periodoRecuperacion)
+        ano = fechaDeCompra[6:]
+        llenarTablaSumaDigitos(int(ano),int(valorInicial),int(periodoRecuperacion),int(valorSalvamento),moneda)
 
 
       #Linea Recta Button
@@ -358,10 +377,11 @@ def abrirVentana2():
     btnCalcularSumaDigitos = Button(vFuncion2, text="SUMA DE DÍGITOS", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
                                     command=tratamientoDeDatosSumaDigitos).place(x=455, y=61)
 
-
-    #Label Tabla
-    lblTituloTabla = tkinter.Label(vFuncion2, text = "Tabla de proyección de depreciación anual", bg  = "#FFFFFF", font = 13,fg = "#1E56A0")
-    lblTituloTabla.place(x=45,y=395)
+    # Label for title of the table
+    tituloTable = StringVar()
+    tituloTable.set("Tabla de proyección de depreciación anual")
+    lblTituloTabla = tkinter.Label(vFuncion2, textvariable=tituloTable, bg="#FFFFFF", font=13, fg="#1E56A0")
+    lblTituloTabla.place(x=45, y=395)
 
 
     #Data labels
@@ -394,24 +414,20 @@ def abrirVentana2():
     showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = formatoInversoFecha(str(date)[:10]), height = 1, width = 40)
     showFechaActual.place(x=230, y=225)
 
-
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
     lblFechaCompra.place(x=45, y=255)
     showFechaCompra = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto5, width = 40)
     showFechaCompra.place(x=230, y=255)
-
 
     lblMoneda = tkinter.Label(vFuncion2, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
     lblMoneda.place(x=45, y=285)   #dolares o colones
     showMoneda = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto6, width = 40)
     showMoneda.place(x=230, y=285)
 
-
     lblValorSalvamento = tkinter.Label(vFuncion2, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
     lblValorSalvamento.place(x=45, y=315)
     showValorSalvamento = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto7, width = 40)
     showValorSalvamento.place(x=230, y=315)
-
 
     lblPeriodoRecuperacion = tkinter.Label(vFuncion2, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
     lblPeriodoRecuperacion.place(x=45, y=345)
@@ -420,7 +436,7 @@ def abrirVentana2():
 
 
     #Table to show the data
-    tblDepreciacion = ttk.Treeview(vFuncion2, columns = ("col1","col2","col3","col4","col5")) #Anadir mas columnas
+    tblDepreciacion = ttk.Treeview(vFuncion2, columns = ("col1","col2","col3","col4","col5"))
     tblDepreciacion.column("#0",width= 100)
     tblDepreciacion.column("col1",width=100)
     tblDepreciacion.column("col2", width=150)
@@ -437,6 +453,7 @@ def abrirVentana2():
     def tasaDepreciacion(periodoRecuperacion):
         tasaDepreciacion = 1 / periodoRecuperacion
         return tasaDepreciacion
+
 
     def formatearPrecioDolar(precioDolar):
         nuevaVersion = ""
@@ -457,55 +474,70 @@ def abrirVentana2():
         return formatearPrecioDolar(dolar)
 
 
-    def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento):
-        date = datetime.today()
-        year = date.strftime("%Y")
-        tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
-        tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
-        tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
-        tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
-        tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.heading("col5", text="Moneda Contraria", anchor=CENTER) #dolar
-        tblDepreciacion.place(x=50, y=430)
-        tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
+    def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento, moneda):
+        if periodoRecuperacion == 0:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
+            lblTituloTabla.config(fg = "#B4092D", font = 'bold')
+        else:
+            fecha = datetime.today()
+            anoActual = fecha.strftime("%Y")
+            tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
+            tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
+            tblDepreciacion.heading("col2", text="Depreciación", anchor=CENTER)
+            tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
+            tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
+            tblDepreciacion.heading("col5", text = moneda, anchor=CENTER) #dolar
+            tblDepreciacion.place(x=50, y=430)
+            tblDepreciacion.delete(*tblDepreciacion.get_children()) #Borrar datos de tabla
+            tituloTable.set("Tabla de proyección de depreciación")
+            lblTituloTabla.config(fg="#1E56A0")
 
-        contador = 0
-        vidaUtil = determinarVidaUtil(periodoRecuperacion)
-        depreciacion = (valorInicial - valorSalvamento)/periodoRecuperacion
-        valorLibros = valorInicial - depreciacion
-        while (ano< int(year)):
-            valorInicial = valorInicial - depreciacion
+            contador = 0
+            vidaUtil = determinarVidaUtil(periodoRecuperacion)
+            depreciacion = (valorInicial - valorSalvamento)/periodoRecuperacion
             valorLibros = valorInicial - depreciacion
-            valorMonedaContraria= valorLibros * determinarPrecioDolar()
-            tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria)))))
-            contador+=1
-            ano +=1
+            while (ano< int(anoActual)):
+                valorInicial = valorInicial - depreciacion
+                valorLibros = valorInicial - depreciacion
+                valorMonedaContraria= valorLibros * determinarPrecioDolar()
+                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria)))))
+                contador+=1
+                ano +=1
 
 
-    def llenarTablaSumaDigitos(ano, costoInicial,periodoRecuperacion, valorSalvamento):
-        date = datetime.today()
-        year = date.strftime("%Y")
-        tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
-        tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
-        tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
-        tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
-        tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
-        tblDepreciacion.heading("col5", text="Moneda Contraria", anchor=CENTER)
-        tblDepreciacion.place(x=50, y=430)
-        tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
-        vidaUtil = determinarVidaUtil(periodoRecuperacion)
-        contador = 1
-        contadorPeriodo = periodoRecuperacion
-        depreciacionAcumulada = 0
-        while(ano < int(year)):
-            depreciacionAnual=(contadorPeriodo / vidaUtil) *(costoInicial - valorSalvamento)
-            depreciacionAcumulada += depreciacionAnual
-            valorLibros = costoInicial - depreciacionAcumulada
-            valorEnMonedaContraria= valorLibros * determinarPrecioDolar()
-            tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorEnMonedaContraria)))))
-            ano +=1
-            contador +=1
-            contadorPeriodo +=1
+    def llenarTablaSumaDigitos(ano, costoInicial,periodoRecuperacion, valorSalvamento, moneda):
+        if periodoRecuperacion == 0:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            tituloTable.set("⚠️ Tabla de proyección no disponible, el activo no se deprecia ⚠️")
+            lblTituloTabla.config(fg = "#B4092D", font = 'bold')
+        else:
+            fecha = datetime.today()
+            anoActual = fecha.strftime("%Y")
+            tblDepreciacion.heading("#0", text="Año", anchor=CENTER)
+            tblDepreciacion.heading("col1", text="Periodo", anchor=CENTER)
+            tblDepreciacion.heading("col2", text="Depreciación Anual", anchor=CENTER)
+            tblDepreciacion.heading("col3", text="Depreciación Acumulada", anchor=CENTER)
+            tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
+            tblDepreciacion.heading("col5", text= moneda, anchor=CENTER)
+            tblDepreciacion.place(x=50, y=430)
+            tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
+            tituloTable.set("Tabla de proyección de depreciación")
+            lblTituloTabla.config(fg="#1E56A0")
+
+            vidaUtil = determinarVidaUtil(periodoRecuperacion)
+            contador = 1
+            contadorPeriodo = periodoRecuperacion
+            depreciacionAcumulada = 0
+            while(ano < int(anoActual)):
+                depreciacionAnual=(contadorPeriodo / vidaUtil) * (costoInicial - valorSalvamento)
+                depreciacionAcumulada += depreciacionAnual
+                valorLibros = costoInicial - depreciacionAcumulada
+                valorEnMonedaContraria= valorLibros * determinarPrecioDolar()
+                tblDepreciacion.insert("", END, text= ano +1, values= (str(contador),str("{:,}". format(round(depreciacionAnual, 2))),str("{:,}".format(round(depreciacionAcumulada, 2))), str("{:,}".format(round(costoInicial - depreciacionAcumulada, 2))),str("{:,}".format (round(valorEnMonedaContraria)))))
+                ano +=1
+                contador +=1
+                contadorPeriodo +=1
 
 
 
