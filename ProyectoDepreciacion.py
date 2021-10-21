@@ -13,8 +13,8 @@ def abrirVentana1():
     # Window properties
     vFuncion1 = Toplevel()
     vFuncion1.title("Depreciación Lineal")
-    anchoVLogin = 1100
-    altoVLogin = 800
+    anchoVLogin = 900
+    altoVLogin = 750
     xPosicion = vFuncion1.winfo_screenwidth() // 2 - anchoVLogin // 2  # Posicionar ventana en centro de la pantalla
     yPosicion = vFuncion1.winfo_screenheight() // 2 - altoVLogin // 2  # Posicionar ventana en centro de la pantalla
     posicionPantalla = str(anchoVLogin) + "x" + str(altoVLogin) + "+" + str(xPosicion) + "+" + str(yPosicion)
@@ -25,7 +25,6 @@ def abrirVentana1():
     # Go back button
     btnCalcularLineaRecta = Button(vFuncion1, text="VOLVER", fg="#FFFFFF", bg="#1E56A0", font="Segoe 10 bold",
                                    command=vFuncion1.destroy).place(x=50, y=700)
-    # nombreVentana,nombreBoton, font, fondo, font = "tamano letra", command = funcionalidad que va a tener
 
     # Label to choose the method
     lblSeleccionarMetodo = tkinter.Label(vFuncion1, text="Seleccione el método de depreciación:", font="Segoe 13",
@@ -258,8 +257,8 @@ def abrirVentana2():
     #Window properties
     vFuncion2 = Toplevel()
     vFuncion2.title("Depreciacion de un activo especifico utilizando un metodo particular")
-    anchoVLogin = 1100
-    altoVLogin = 800
+    anchoVLogin = 900
+    altoVLogin = 750
     xPosicion = vFuncion2.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
     yPosicion = vFuncion2.winfo_screenheight() // 2 - altoVLogin // 2 #Posicionar ventana en centro de la pantalla
     posicionPantalla = str(anchoVLogin) + "x" + str(altoVLogin) + "+" + str(xPosicion) + "+" + str(yPosicion)
@@ -270,7 +269,6 @@ def abrirVentana2():
 
     #Go back button
     btnCalcularLineaRecta = Button(vFuncion2, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion2.destroy).place(x=50,y=700)
-    #nombreVentana,nombreBoton, font, fondo, font = "tamano letra", command = funcionalidad que va a tener
 
 
     #Label to choose the method
@@ -502,14 +500,29 @@ def abrirVentana2():
             vidaUtil = determinarVidaUtil(periodoRecuperacion)
             depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
             valorLibros = valorInicial - depreciacion
+            valorMonedaContraria = 0
             while (ano <= int(anoActual)):
-                valorInicial = valorInicial - depreciacion
-                valorLibros = valorInicial - depreciacion
+                if valorLibros == valorSalvamento:
+                    while(ano < int(anoActual)-1):
+                        tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
+                                                                               str(depreciacion),
+                                                                               str(round(tasaDepreciacion(
+                                                                                   periodoRecuperacion), 10)),
+                                                                               str("{:,}".format(valorLibros)),
+                                                                               str("{:,}".format(round(valorMonedaContraria, 2)))))
+                        contador += 1
+                        ano += 1
                 if (moneda == "Colones"):
                     valorMonedaContraria = valorLibros / determinarPrecioDolar()
                 else:
                     valorMonedaContraria = valorLibros * determinarPrecioDolar()
-                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1), str(depreciacion), str(round(tasaDepreciacion(periodoRecuperacion), 10)),str("{:,}".format(valorLibros)), str("{:,}".format(round(valorMonedaContraria,2)))))
+                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
+                                                                       str(depreciacion),
+                                                                       str(round(tasaDepreciacion(periodoRecuperacion), 10)),
+                                                                       str("{:,}".format(valorLibros)),
+                                                                       str("{:,}".format(round(valorMonedaContraria,2)))))
+                valorInicial = valorInicial - depreciacion
+                valorLibros = valorInicial - depreciacion
                 contador+=1
                 ano +=1
 
@@ -575,6 +588,30 @@ def abrirVentana2():
                 contador +=1
                 contadorPeriodo -=1
 
+#===============================================================================[TERCERA FUNCION]========================================================================================
+
+def abrirVentana3():
+
+    #Window properties
+    vFuncion3 = Toplevel()
+    vFuncion3.title("Reporte General de depreciación acumulada")
+    anchoVLogin = 900
+    altoVLogin = 750
+    xPosicion = vFuncion3.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
+    yPosicion = vFuncion3.winfo_screenheight() // 2 - altoVLogin // 2 #Posicionar ventana en centro de la pantalla
+    posicionPantalla = str(anchoVLogin) + "x" + str(altoVLogin) + "+" + str(xPosicion) + "+" + str(yPosicion)
+    vFuncion3.geometry(posicionPantalla)
+    vFuncion3['bg'] = '#FFFFFF'
+    vFuncion3.resizable(0,0)
+
+
+    #Go back button
+    btnCalcularLineaRecta = Button(vFuncion3, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion3.destroy).place(x=50,y=700)
+
+    #Label for title
+    lblNumeroActivo = tkinter.Label(vFuncion3, text="🢂 Reporte general de depreciación", font="Segoe 14", bg="#FFFFFF", fg = "#1E56A0")
+    lblNumeroActivo.place(x=15, y=15)
+
 
 
 #===============================================================================[VENTANA PRINCIPAL]========================================================================================
@@ -585,7 +622,7 @@ def abrirVentanaPrincipal():
 
     #Main window properties
     vLogin.title("Login - Depreciación de Activos") #titulo ventana
-    anchoVLogin = 1000
+    anchoVLogin = 650
     altoVLogin = 700
     xPosicion = vLogin.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
     yPosicion = vLogin.winfo_screenheight() // 2 - altoVLogin // 2 #Posicionar ventana en centro de la pantalla
@@ -597,25 +634,19 @@ def abrirVentanaPrincipal():
 
     #Title Label
     lblTitulo = Label(vLogin, text = "¡Bienvenido al sistema de \n depreciación de activos! \n Seleccione una de las siguientes opciones:",
-                      fg = "#555555", bg = "#E8E8E8", font = "Segoe 20", height = 3, width = 35)
-    lblTitulo.place(x=230, y=45)
-
-
-    #Rectangle in the back
-    lblRectangulo = Label(vLogin, fg = "#D6E4F0", bg = "#E8E8E8", font = "Segoe 25", height = 17, width = 42)
-    lblRectangulo.lower()
-    lblRectangulo.place(x=100, y=25)
+                      fg = "#555555", bg = "#E8E8E8", font = "Segoe 17", height = 3, width = 35)
+    lblTitulo.place(x=135, y=45)
 
 
     #Option buttons
     btnFuncion1 = Button(vLogin,text = "Proyección de depreciación de un activo \n específico usando un método particular"
-                         ,fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 15", height = 2, width = 34, command = abrirVentana1).place(x=315,y=185)
+                         ,fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 2, width = 34, command = abrirVentana1).place(x=138,y=185)
     btnFuncion2 = Button(vLogin,text = "Depreciación acumulada de un activo\n específico usando un método particular",
-                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 15", height = 2, width = 34,command= abrirVentana2).place(x=315,y=280)
+                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 2, width = 34,command= abrirVentana2).place(x=138,y=280)
     btnFuncion3 = Button(vLogin,text = "Reporte general de depreciación \nacumulada de todos los activos bajo \nun método de depreciación",
-                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 15", height = 3, width = 34).place(x=315,y=370)
+                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 3, width = 34, command= abrirVentana3).place(x=138,y=370)
     btnFuncion4 = Button(vLogin,text = "Reporte general de proyección de\n depreciación de todos los activos de una\n categoría bajo un método de\n depreciación particular",
-                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 15", height = 4, width = 34).place(x=315,y=480)
+                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 4, width = 34).place(x=138,y=480)
 
 
     #Invocator
