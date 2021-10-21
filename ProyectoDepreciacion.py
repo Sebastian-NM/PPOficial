@@ -12,7 +12,7 @@ import pandas as pd
 def abrirVentana1():
     # Window properties
     vFuncion1 = Toplevel()
-    vFuncion1.title("Depreciación Lineal")
+    vFuncion1.title("Proyección de depreciación de un activo específico")
     anchoVLogin = 900
     altoVLogin = 750
     xPosicion = vFuncion1.winfo_screenwidth() // 2 - anchoVLogin // 2  # Posicionar ventana en centro de la pantalla
@@ -172,11 +172,11 @@ def abrirVentana1():
 
     # Table to show the data
     tblDepreciacion = ttk.Treeview(vFuncion1, columns=("col1", "col2", "col3", "col4"))  # Anadir mas columnas
-    tblDepreciacion.column("#0", width=100)
-    tblDepreciacion.column("col1", width=100)
-    tblDepreciacion.column("col2", width=150)
-    tblDepreciacion.column("col3", width=150)
-    tblDepreciacion.column("col4", width=150)
+    tblDepreciacion.column("#0", width=100, anchor=CENTER)
+    tblDepreciacion.column("col1", width=100, anchor=CENTER)
+    tblDepreciacion.column("col2", width=150, anchor=CENTER)
+    tblDepreciacion.column("col3", width=150, anchor=CENTER)
+    tblDepreciacion.column("col4", width=150, anchor=CENTER)
 
     def determinarVidaUtil(periodoRecuperacion):
         vidaUtil = periodoRecuperacion * (periodoRecuperacion + 1) // 2
@@ -256,7 +256,7 @@ def abrirVentana2():
 
     #Window properties
     vFuncion2 = Toplevel()
-    vFuncion2.title("Depreciacion de un activo especifico utilizando un metodo particular")
+    vFuncion2.title("Depreciación de un activo específico hasta la actualidad")
     anchoVLogin = 900
     altoVLogin = 750
     xPosicion = vFuncion2.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
@@ -268,7 +268,7 @@ def abrirVentana2():
 
 
     #Go back button
-    btnCalcularLineaRecta = Button(vFuncion2, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion2.destroy).place(x=50,y=700)
+    btnVolver = Button(vFuncion2, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion2.destroy).place(x=50,y=700)
 
 
     #Label to choose the method
@@ -310,6 +310,8 @@ def abrirVentana2():
     cmbCodigosDisponibles.grid(column=0, row=1)
     cmbCodigosDisponibles.current(0)
     cmbCodigosDisponibles.place(x=360, y=21)
+
+    #Variables to put the HTML values in
     texto = StringVar()
     texto2 = StringVar()
     texto3 = StringVar()
@@ -319,7 +321,7 @@ def abrirVentana2():
     texto7 = StringVar()
     texto8 = StringVar()
 
-
+    #Funcionality of the button Linea Recta
     def tratamientoDeDatosLineaRecta():
         archivo = pd.read_html("datos.html")
         cuadroInformacion = archivo[0]
@@ -342,7 +344,7 @@ def abrirVentana2():
         ano = fechaDeCompra[6:]
         llenarTablaLineaRecta(int(ano), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento), str(moneda))
 
-
+    #Funcionality of the button Suma Digitos
     def tratamientoDeDatosSumaDigitos():
         archivo = pd.read_html("datos.html")
         cuadroInformacion = archivo[0]
@@ -366,8 +368,7 @@ def abrirVentana2():
         llenarTablaSumaDigitos(int(ano),int(valorInicial),int(periodoRecuperacion),int(valorSalvamento),moneda)
 
 
-
-      #Linea Recta Button
+    #Linea Recta Button
     btnCalcularLineaRecta = Button(vFuncion2, text = "LÍNEA RECTA", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 9",
                                    command = tratamientoDeDatosLineaRecta).place(x=360,y = 61)
 
@@ -375,6 +376,7 @@ def abrirVentana2():
     #Suma Digitos Button
     btnCalcularSumaDigitos = Button(vFuncion2, text="SUMA DE DÍGITOS", fg="#FFFFFF", bg="#1E56A0", font="Segoe 9",
                                     command=tratamientoDeDatosSumaDigitos).place(x=455, y=61)
+
 
     # Label for title of the table
     tituloTable = StringVar()
@@ -388,17 +390,14 @@ def abrirVentana2():
     lblNumeroActivo.place(x=45, y=105)
     showNumeroActivo = tkinter.Label(vFuncion2, font="Segoe 12", bg= "#E5E5E5", height = 1, textvariable = texto, width = 40)
     showNumeroActivo.place(x=230, y=105)
-
     lblCategoria = tkinter.Label(vFuncion2, text="Categoría:", font="Segoe 12", bg="#FFFFFF")
     lblCategoria.place(x=45, y=135)
     showCategoria = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto2, width = 40)
     showCategoria.place(x=230, y=135)
-
     lblDetalle = tkinter.Label(vFuncion2, text="Detalle:", font="Segoe 12", bg="#FFFFFF")
     lblDetalle.place(x=45, y=165)
     showDetalle = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto3, width = 40)
     showDetalle.place(x=230, y=165)
-
     lblValorInicial = tkinter.Label(vFuncion2, text="Valor Inicial:", font="Segoe 12", bg="#FFFFFF")
     lblValorInicial.place(x=45, y=195)
     showValorInicial = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto4, width = 40)
@@ -412,22 +411,18 @@ def abrirVentana2():
     lblFechaActual.place(x=45, y=225)
     showFechaActual = tkinter.Label(vFuncion2, font="Segoe 12",text = formatoInversoFecha(str(date)[:10]), height = 1, width = 40)
     showFechaActual.place(x=230, y=225)
-
     lblFechaCompra = tkinter.Label(vFuncion2, text="Fecha de compra:", font="Segoe 12", bg="#FFFFFF")
     lblFechaCompra.place(x=45, y=255)
     showFechaCompra = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto5, width = 40)
     showFechaCompra.place(x=230, y=255)
-
     lblMoneda = tkinter.Label(vFuncion2, text="Moneda:", font="Segoe 12", bg="#FFFFFF")
     lblMoneda.place(x=45, y=285)   #dolares o colones
     showMoneda = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto6, width = 40)
     showMoneda.place(x=230, y=285)
-
     lblValorSalvamento = tkinter.Label(vFuncion2, text="Valor de salvamento:", font="Segoe 12", bg="#FFFFFF")
     lblValorSalvamento.place(x=45, y=315)
     showValorSalvamento = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto7, width = 40)
     showValorSalvamento.place(x=230, y=315)
-
     lblPeriodoRecuperacion = tkinter.Label(vFuncion2, text="Periodo de recuperación:", font="Segoe 12", bg="#FFFFFF")
     lblPeriodoRecuperacion.place(x=45, y=345)
     showPeriodoRecuperacion = tkinter.Label(vFuncion2, font="Segoe 12", bg="#E5E5E5", height = 1, textvariable = texto8, width = 40)
@@ -436,12 +431,12 @@ def abrirVentana2():
 
     #Table to show the data
     tblDepreciacion = ttk.Treeview(vFuncion2, columns = ("col1","col2","col3","col4","col5"))
-    tblDepreciacion.column("#0",width= 100)
-    tblDepreciacion.column("col1",width=100)
-    tblDepreciacion.column("col2", width=150)
-    tblDepreciacion.column("col3", width=150)
-    tblDepreciacion.column("col4", width=150)
-    tblDepreciacion.column("col5", width=150)
+    tblDepreciacion.column("#0",width= 100, anchor=CENTER)
+    tblDepreciacion.column("col1",width=100, anchor=CENTER)
+    tblDepreciacion.column("col2", width=150, anchor=CENTER)
+    tblDepreciacion.column("col3", width=150, anchor=CENTER)
+    tblDepreciacion.column("col4", width=150, anchor=CENTER)
+    tblDepreciacion.column("col5", width=150, anchor=CENTER)
 
 
     def determinarVidaUtil(periodoRecuperacion):
@@ -497,7 +492,6 @@ def abrirVentana2():
             lblTituloTabla.config(fg="#1E56A0")
             ano += 1
             contador = 0
-            vidaUtil = determinarVidaUtil(periodoRecuperacion)
             depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
             valorLibros = valorInicial - depreciacion
             valorMonedaContraria = 0
@@ -507,7 +501,7 @@ def abrirVentana2():
                         tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
                                                                                str(depreciacion),
                                                                                str(round(tasaDepreciacion(
-                                                                                   periodoRecuperacion), 10)),
+                                                                                   periodoRecuperacion), 2)),
                                                                                str("{:,}".format(valorLibros)),
                                                                                str("{:,}".format(round(valorMonedaContraria, 2)))))
                         contador += 1
@@ -518,7 +512,7 @@ def abrirVentana2():
                     valorMonedaContraria = valorLibros * determinarPrecioDolar()
                 tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
                                                                        str(depreciacion),
-                                                                       str(round(tasaDepreciacion(periodoRecuperacion), 10)),
+                                                                       str(round(tasaDepreciacion(periodoRecuperacion), 2)),
                                                                        str("{:,}".format(valorLibros)),
                                                                        str("{:,}".format(round(valorMonedaContraria,2)))))
                 valorInicial = valorInicial - depreciacion
@@ -588,15 +582,15 @@ def abrirVentana2():
                 contador +=1
                 contadorPeriodo -=1
 
-#===============================================================================[TERCERA FUNCION]========================================================================================
+#===============================================================================[TERCER FUNCION]========================================================================================
 
 def abrirVentana3():
 
     #Window properties
     vFuncion3 = Toplevel()
     vFuncion3.title("Reporte General de depreciación acumulada")
-    anchoVLogin = 900
-    altoVLogin = 750
+    anchoVLogin = 1360
+    altoVLogin = 700
     xPosicion = vFuncion3.winfo_screenwidth() // 2 - anchoVLogin // 2 #Posicionar ventana en centro de la pantalla
     yPosicion = vFuncion3.winfo_screenheight() // 2 - altoVLogin // 2 #Posicionar ventana en centro de la pantalla
     posicionPantalla = str(anchoVLogin) + "x" + str(altoVLogin) + "+" + str(xPosicion) + "+" + str(yPosicion)
@@ -606,12 +600,258 @@ def abrirVentana3():
 
 
     #Go back button
-    btnCalcularLineaRecta = Button(vFuncion3, text = "VOLVER", fg = "#FFFFFF", bg = "#1E56A0",font = "Segoe 10 bold", command = vFuncion3.destroy).place(x=50,y=700)
+    btnRetroceder = Button(vFuncion3, text = "VOLVER", fg = "#FFFFFF",
+                           bg = "#1E56A0",font = "Segoe 10 bold",
+                           command = vFuncion3.destroy).place(x=50,y=575)
+
 
     #Label for title
     lblNumeroActivo = tkinter.Label(vFuncion3, text="🢂 Reporte general de depreciación", font="Segoe 14", bg="#FFFFFF", fg = "#1E56A0")
-    lblNumeroActivo.place(x=15, y=15)
+    lblNumeroActivo.place(x=45, y=25)
 
+
+    #Table columns' properties
+    tblDepreciacion = ttk.Treeview(vFuncion3, columns=("col1", "col2", "col3", "col4", "col5","col6", "col7",))
+    tblDepreciacion.column("#0", width=95, anchor=CENTER)
+    tblDepreciacion.column("col1", width=300, anchor=CENTER)
+    tblDepreciacion.column("col2", width=90, anchor=CENTER)
+    tblDepreciacion.column("col3", width=150, anchor=CENTER)
+    tblDepreciacion.column("col4", width=170, anchor=CENTER)
+    tblDepreciacion.column("col5", width=150, anchor=CENTER)
+    tblDepreciacion.column("col6", width=150, anchor=CENTER)
+    tblDepreciacion.column("col7", width=150, anchor=CENTER)
+
+    tblDepreciacion.heading("#0", text = "Identificador", anchor=CENTER)
+    tblDepreciacion.heading("col1", text = "Detalle", anchor=CENTER)
+    tblDepreciacion.heading("col2",  text = "Categoría", anchor=CENTER)
+    tblDepreciacion.heading("col3", text = "Fecha de Compra", anchor=CENTER)
+    tblDepreciacion.heading("col4", text = "Periodos que se ha depreciado", anchor=CENTER)
+    tblDepreciacion.heading("col5", text = "Valor Inicial", anchor=CENTER)
+    tblDepreciacion.heading("col6", text = "Valor en libros", anchor=CENTER)
+    tblDepreciacion.heading("col7", text = "Periodo de recuperación", anchor=CENTER)
+
+    tblDepreciacion.place(x=50, y=135)
+
+
+    #Label about choosing the depreciation mode
+    lblEscogerDepreciacion = Label(vFuncion3, text = "Seleccione el método de depreciación a mostrar:", font = ("Segoe 13"), bg = "#FFFFFF")
+    lblEscogerDepreciacion.place(x=45,y=80)
+
+
+    def formatearPrecioDolar(precioDolar):
+        nuevaVersion = ""
+        for i in range(len(precioDolar)):
+            if precioDolar[i] == ",":
+                nuevaVersion += "."
+            if (precioDolar[i]).isdigit():
+                nuevaVersion += precioDolar[i]
+        return float(nuevaVersion)
+
+
+    def determinarPrecioDolar():
+        urlBanco = 'https://gee.bccr.fi.cr/indicadoreseconomicos/Cuadros/frmVerCatCuadro.aspx?idioma=1&CodCuadro=%20400'
+        page = requests.get(urlBanco)
+        soup = BeautifulSoup(page.content, 'html.parser')
+        tipoCambio = soup.find_all('td', class_='celda400')
+        dolar = tipoCambio[89].text
+        return formatearPrecioDolar(dolar)
+
+
+    def determinarVidaUtil(periodoRecuperacion):
+        return periodoRecuperacion * (periodoRecuperacion + 1) // 2
+
+
+    #Function that provides the lineal depreciation until the actual date
+    def calcularDepreciacionLineal(ano,periodoRecuperacion,valorInicial,valorSalvamento):
+        listaResultados = []
+        fecha = datetime.today()
+        anoActual = int(fecha.strftime("%Y"))
+        periodos = 1
+        depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
+        valorLibros = valorInicial - depreciacion
+        while ano < anoActual-1:
+            if periodos == periodoRecuperacion:
+                break
+            else:
+                valorLibros = valorLibros - depreciacion
+                ano+=1
+                periodos += 1
+
+        listaResultados.append(periodos)
+        listaResultados.append(valorLibros)
+
+        return listaResultados
+
+
+    # Function that provides the digits addition depreciation until the actual date
+    def calcularDepreciacionSumaDigitos(ano, periodoRecuperacion, costoInicial, valorSalvamento):
+        listaResultados = []
+        fecha = datetime.today()
+        anoActual = int(fecha.strftime("%Y"))
+        vidaUtil = determinarVidaUtil(periodoRecuperacion)
+        contador = 0
+        contadorPeriodo = periodoRecuperacion
+        depreciacionAcumulada = 0
+        valorLibros = 0
+        while ano <= anoActual-1:
+            if contador == periodoRecuperacion:
+                break
+            else:
+                depreciacionAnual = (contadorPeriodo / vidaUtil) * (costoInicial - valorSalvamento)
+                depreciacionAcumulada += depreciacionAnual
+                valorLibros = costoInicial - depreciacionAcumulada
+                ano += 1
+                contador += 1
+                contadorPeriodo -= 1
+
+        listaResultados.append(contador)
+        listaResultados.append(valorLibros)
+
+        return listaResultados
+
+
+    #Function that fills the table given the HTML info and the procedures with linear depreciation
+    def llenarTablaLineaRecta():
+        tblDepreciacion.delete(*tblDepreciacion.get_children())
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            if str(cuadroInformacion[1][indice]) != "AFTT":
+                numeroActivo = cuadroInformacion[0][indice]
+                categoria = cuadroInformacion[1][indice]
+                nombre = cuadroInformacion[2][indice]
+                valorInicial = cuadroInformacion[3][indice]
+                fechaDeCompra = cuadroInformacion[4][indice]
+                anoCompra = fechaDeCompra[6:]
+                valorSalvamento = cuadroInformacion[6][indice]
+                periodoRecuperacion = cuadroInformacion[7][indice]
+                calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra),int(periodoRecuperacion),int(valorInicial),int(valorSalvamento))
+                tblDepreciacion.insert("", END, text=numeroActivo, values = (nombre,
+                                                                             categoria,
+                                                                             fechaDeCompra,
+                                                                             calculosDepreciacion[0],
+                                                                             "{:,}".format(int(valorInicial)),
+                                                                             "{:,}".format(round(calculosDepreciacion[1],2)),
+                                                                             periodoRecuperacion))
+            indice += 1
+
+
+    def llenarTablaSumaDigitos():
+        tblDepreciacion.delete(*tblDepreciacion.get_children())
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            if str(cuadroInformacion[1][indice]) != "AFTT":
+                numeroActivo = cuadroInformacion[0][indice]
+                categoria = cuadroInformacion[1][indice]
+                nombre = cuadroInformacion[2][indice]
+                valorInicial = cuadroInformacion[3][indice]
+                fechaDeCompra = cuadroInformacion[4][indice]
+                anoCompra = fechaDeCompra[6:]
+                valorSalvamento = cuadroInformacion[6][indice]
+                periodoRecuperacion = cuadroInformacion[7][indice]
+                calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                  int(valorInicial), int(valorSalvamento))
+                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                           categoria,
+                                                                           fechaDeCompra,
+                                                                           calculosDepreciacion[0],
+                                                                           "{:,}".format(int(valorInicial)),
+                                                                           "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                           periodoRecuperacion))
+            indice += 1
+
+
+    #Linea Recta Button
+    btnCalcularLineaRecta = Button(vFuncion3, text="LINEAL", fg="#BFCA0A",
+                                   bg="#1E56A0", font="Segoe 10 bold",
+                                   command = llenarTablaLineaRecta).place(x=415, y=79)
+
+
+    #Suma Digitos Button
+    btnCalcularSumaDigitos = Button(vFuncion3, text="SUMA DE DÍGITOS", fg="#BFCA0A",
+                                    bg="#1E56A0", font="Segoe 10 bold",
+                                    command = llenarTablaSumaDigitos).place(x=500, y=79)
+
+    vrRadioButton = IntVar()
+
+    def convertirColones():
+        tblDepreciacion.delete(*tblDepreciacion.get_children())
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            if str(cuadroInformacion[1][indice]) != "AFTT":
+                numeroActivo = cuadroInformacion[0][indice]
+                categoria = cuadroInformacion[1][indice]
+                nombre = cuadroInformacion[2][indice]
+                valorInicial = cuadroInformacion[3][indice]
+                fechaDeCompra = cuadroInformacion[4][indice]
+                anoCompra = fechaDeCompra[6:]
+                moneda = cuadroInformacion[5][indice]
+                valorSalvamento = cuadroInformacion[6][indice]
+                periodoRecuperacion = cuadroInformacion[7][indice]
+                if moneda == str("Dolares"):
+                    valorInicial = int(valorInicial) * determinarPrecioDolar()
+                    valorSalvamento = int(valorSalvamento) * determinarPrecioDolar()
+                calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                       int(valorInicial), int(valorSalvamento))
+                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                           categoria,
+                                                                           fechaDeCompra,
+                                                                           calculosDepreciacion[0],
+                                                                           "{:,}".format(int(valorInicial)),
+                                                                           "₡" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                           periodoRecuperacion))
+            indice += 1
+
+    def convertirDolares():
+        tblDepreciacion.delete(*tblDepreciacion.get_children())
+        archivo = pd.read_html("datos.html")
+        cuadroInformacion = archivo[0]
+        indice = 1
+        while indice < archivo[0].shape[0]:
+            if str(cuadroInformacion[1][indice]) != "AFTT":
+                numeroActivo = cuadroInformacion[0][indice]
+                categoria = cuadroInformacion[1][indice]
+                nombre = cuadroInformacion[2][indice]
+                valorInicial = cuadroInformacion[3][indice]
+                fechaDeCompra = cuadroInformacion[4][indice]
+                moneda = cuadroInformacion[5][indice]
+                anoCompra = fechaDeCompra[6:]
+                valorSalvamento = cuadroInformacion[6][indice]
+                periodoRecuperacion = cuadroInformacion[7][indice]
+                calculosDepreciacion = []
+                if moneda == str("Colones"):
+                    valorInicial = int(valorInicial) / determinarPrecioDolar()
+                    valorSalvamento = int(valorSalvamento) / determinarPrecioDolar()
+                if vrRadioButton == 1:
+                    calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                       int(valorInicial), int(valorSalvamento))
+                elif vrRadioButton == 2:
+                    calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                           int(valorInicial), int(valorSalvamento))
+                else:
+                    pass
+                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                           categoria,
+                                                                           fechaDeCompra,
+                                                                           calculosDepreciacion[0],
+                                                                           "{:,}".format(int(valorInicial)),
+                                                                           "$" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                           periodoRecuperacion))
+            indice += 1
+
+    def convertirMoneda():
+        if vrRadioButton.get() == 1:
+            convertirColones()
+        if vrRadioButton.get() == 2:
+            convertirDolares()
+
+    rbColones = Radiobutton(vFuncion3, text = "Conversión a colones", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
+    rbDolares = Radiobutton(vFuncion3, text = "Conversión a dólares", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 200,y = "380")
 
 
 #===============================================================================[VENTANA PRINCIPAL]========================================================================================
@@ -634,8 +874,8 @@ def abrirVentanaPrincipal():
 
     #Title Label
     lblTitulo = Label(vLogin, text = "¡Bienvenido al sistema de \n depreciación de activos! \n Seleccione una de las siguientes opciones:",
-                      fg = "#555555", bg = "#E8E8E8", font = "Segoe 17", height = 3, width = 35)
-    lblTitulo.place(x=135, y=45)
+                      fg = "#555555", bg = "#FFFFFF", font = "Segoe 17", height = 3, width = 35)
+    lblTitulo.place(x=100, y=45)
 
 
     #Option buttons
