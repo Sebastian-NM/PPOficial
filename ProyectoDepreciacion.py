@@ -862,8 +862,8 @@ def abrirVentana3():
         if vrRadioButton.get() == 2:
             convertirDolares()
 
-    rbColones = Radiobutton(vFuncion3, text = "Conversión a colones", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
-    rbDolares = Radiobutton(vFuncion3, text = "Conversión a dólares", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 200,y = "380")
+    rbColones = Radiobutton(vFuncion3, text = "Conversión a colones", font = "Segoe 10 bold", bg = "#FFFFFF", fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
+    rbDolares = Radiobutton(vFuncion3, text = "Conversión a dólares", font = "Segoe 10 bold",bg = "#FFFFFF",fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 230,y = "380")
 
 
 #===============================================================================[VENTANA PRINCIPAL]========================================================================================
@@ -891,13 +891,13 @@ def abrirVentanaPrincipal():
 
 
     #Option buttons
-    btnFuncion1 = Button(vLogin,text = "Proyección de depreciación de un activo \n específico usando un método particular"
+    btnFuncion1 = Button(vLogin,text = "Proyección de depreciación de un activo"
                          ,fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 2, width = 34, command = abrirVentana1).place(x=138,y=185)
-    btnFuncion2 = Button(vLogin,text = "Depreciación acumulada de un activo\n específico usando un método particular",
+    btnFuncion2 = Button(vLogin,text = "Depreciación acumulada de un activo",
                          fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 2, width = 34,command= abrirVentana2).place(x=138,y=280)
-    btnFuncion3 = Button(vLogin,text = "Reporte general de depreciación \nacumulada de todos los activos bajo \nun método de depreciación",
+    btnFuncion3 = Button(vLogin,text = "Reporte general de depreciación \nacumulada de todos los activos",
                          fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 3, width = 34, command= abrirVentana3).place(x=138,y=370)
-    btnFuncion4 = Button(vLogin,text = "Reporte general de proyección de\n depreciación de todos los activos de una\n categoría bajo un método de\n depreciación particular",
+    btnFuncion4 = Button(vLogin,text = "Reporte general de proyección de\n depreciación de todos los activos de una\n categoría",
                          fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 4, width = 34).place(x=138,y=480)
 
 
