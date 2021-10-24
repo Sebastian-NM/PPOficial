@@ -633,11 +633,15 @@ def abrirVentana3():
     tblDepreciacion.place(x=50, y=135)
 
 
+    metodoUtilizado = StringVar()
+    metodoUtilizado.set("")
+
     #Label about choosing the depreciation mode
     lblEscogerDepreciacion = Label(vFuncion3, text = "Seleccione el método de depreciación a mostrar:", font = ("Segoe 13"), bg = "#FFFFFF")
     lblEscogerDepreciacion.place(x=45,y=80)
 
 
+    #Takes the dolar value and quits letters and replaces commas for dots
     def formatearPrecioDolar(precioDolar):
         nuevaVersion = ""
         for i in range(len(precioDolar)):
@@ -712,6 +716,7 @@ def abrirVentana3():
 
     #Function that fills the table given the HTML info and the procedures with linear depreciation
     def llenarTablaLineaRecta():
+        metodoUtilizado.set("lineal")
         tblDepreciacion.delete(*tblDepreciacion.get_children())
         archivo = pd.read_html("datos.html")
         cuadroInformacion = archivo[0]
@@ -738,6 +743,7 @@ def abrirVentana3():
 
 
     def llenarTablaSumaDigitos():
+        metodoUtilizado.set("suma")
         tblDepreciacion.delete(*tblDepreciacion.get_children())
         archivo = pd.read_html("datos.html")
         cuadroInformacion = archivo[0]
@@ -778,71 +784,77 @@ def abrirVentana3():
     vrRadioButton = IntVar()
 
     def convertirColones():
-        tblDepreciacion.delete(*tblDepreciacion.get_children())
-        archivo = pd.read_html("datos.html")
-        cuadroInformacion = archivo[0]
-        indice = 1
-        while indice < archivo[0].shape[0]:
-            if str(cuadroInformacion[1][indice]) != "AFTT":
-                numeroActivo = cuadroInformacion[0][indice]
-                categoria = cuadroInformacion[1][indice]
-                nombre = cuadroInformacion[2][indice]
-                valorInicial = cuadroInformacion[3][indice]
-                fechaDeCompra = cuadroInformacion[4][indice]
-                anoCompra = fechaDeCompra[6:]
-                moneda = cuadroInformacion[5][indice]
-                valorSalvamento = cuadroInformacion[6][indice]
-                periodoRecuperacion = cuadroInformacion[7][indice]
-                if moneda == str("Dolares"):
-                    valorInicial = int(valorInicial) * determinarPrecioDolar()
-                    valorSalvamento = int(valorSalvamento) * determinarPrecioDolar()
-                calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
-                                                                       int(valorInicial), int(valorSalvamento))
-                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
-                                                                           categoria,
-                                                                           fechaDeCompra,
-                                                                           calculosDepreciacion[0],
-                                                                           "{:,}".format(int(valorInicial)),
-                                                                           "₡" + "{:,}".format(round(calculosDepreciacion[1], 2)),
-                                                                           periodoRecuperacion))
-            indice += 1
+        if metodoUtilizado.get() == "":
+            pass
+        else:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            archivo = pd.read_html("datos.html")
+            cuadroInformacion = archivo[0]
+            indice = 1
+            while indice < archivo[0].shape[0]:
+                if str(cuadroInformacion[1][indice]) != "AFTT":
+                    numeroActivo = cuadroInformacion[0][indice]
+                    categoria = cuadroInformacion[1][indice]
+                    nombre = cuadroInformacion[2][indice]
+                    valorInicial = cuadroInformacion[3][indice]
+                    fechaDeCompra = cuadroInformacion[4][indice]
+                    anoCompra = fechaDeCompra[6:]
+                    moneda = cuadroInformacion[5][indice]
+                    valorSalvamento = cuadroInformacion[6][indice]
+                    periodoRecuperacion = cuadroInformacion[7][indice]
+                    calculosDepreciacion = []
+                    if moneda == str("Dolares"):
+                        valorInicial = int(valorInicial) * determinarPrecioDolar()
+                        valorSalvamento = int(valorSalvamento) * determinarPrecioDolar()
+                    if metodoUtilizado.get() == "suma":
+                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento))
+                    elif metodoUtilizado.get() == "lineal":
+                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion), int(valorInicial),int(valorSalvamento))
+
+                    tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                               categoria,
+                                                                               fechaDeCompra,
+                                                                               calculosDepreciacion[0],
+                                                                               "₡" + "{:,}".format(int(valorInicial)),
+                                                                               "₡" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                               periodoRecuperacion))
+                indice += 1
 
     def convertirDolares():
-        tblDepreciacion.delete(*tblDepreciacion.get_children())
-        archivo = pd.read_html("datos.html")
-        cuadroInformacion = archivo[0]
-        indice = 1
-        while indice < archivo[0].shape[0]:
-            if str(cuadroInformacion[1][indice]) != "AFTT":
-                numeroActivo = cuadroInformacion[0][indice]
-                categoria = cuadroInformacion[1][indice]
-                nombre = cuadroInformacion[2][indice]
-                valorInicial = cuadroInformacion[3][indice]
-                fechaDeCompra = cuadroInformacion[4][indice]
-                moneda = cuadroInformacion[5][indice]
-                anoCompra = fechaDeCompra[6:]
-                valorSalvamento = cuadroInformacion[6][indice]
-                periodoRecuperacion = cuadroInformacion[7][indice]
-                calculosDepreciacion = []
-                if moneda == str("Colones"):
-                    valorInicial = int(valorInicial) / determinarPrecioDolar()
-                    valorSalvamento = int(valorSalvamento) / determinarPrecioDolar()
-                if vrRadioButton == 1:
-                    calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
-                                                                       int(valorInicial), int(valorSalvamento))
-                elif vrRadioButton == 2:
-                    calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
-                                                                           int(valorInicial), int(valorSalvamento))
-                else:
-                    pass
-                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
-                                                                           categoria,
-                                                                           fechaDeCompra,
-                                                                           calculosDepreciacion[0],
-                                                                           "{:,}".format(int(valorInicial)),
-                                                                           "$" + "{:,}".format(round(calculosDepreciacion[1], 2)),
-                                                                           periodoRecuperacion))
-            indice += 1
+        if metodoUtilizado.get() == "":
+            pass
+        else:
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
+            archivo = pd.read_html("datos.html")
+            cuadroInformacion = archivo[0]
+            indice = 1
+            while indice < archivo[0].shape[0]:
+                if str(cuadroInformacion[1][indice]) != "AFTT":
+                    numeroActivo = cuadroInformacion[0][indice]
+                    categoria = cuadroInformacion[1][indice]
+                    nombre = cuadroInformacion[2][indice]
+                    valorInicial = cuadroInformacion[3][indice]
+                    fechaDeCompra = cuadroInformacion[4][indice]
+                    moneda = cuadroInformacion[5][indice]
+                    anoCompra = fechaDeCompra[6:]
+                    valorSalvamento = cuadroInformacion[6][indice]
+                    periodoRecuperacion = cuadroInformacion[7][indice]
+                    calculosDepreciacion = []
+                    if moneda == str("Colones"):
+                        valorInicial = int(valorInicial) / determinarPrecioDolar()
+                        valorSalvamento = int(valorSalvamento) / determinarPrecioDolar()
+                    if metodoUtilizado.get() == "lineal":
+                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion), int(valorInicial),int(valorSalvamento))
+                    elif metodoUtilizado.get() == "suma":
+                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),int(valorInicial), int(valorSalvamento))
+                    tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                               categoria,
+                                                                               fechaDeCompra,
+                                                                               calculosDepreciacion[0],
+                                                                               "$" + "{:,}".format(int(valorInicial)),
+                                                                               "$" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                               periodoRecuperacion))
+                indice += 1
 
     def convertirMoneda():
         if vrRadioButton.get() == 1:
