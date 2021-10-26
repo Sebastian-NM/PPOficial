@@ -31,9 +31,11 @@ def abrirVentana1():
                                          bg="#FFFFFF")
     lblSeleccionarMetodo.place(x=45, y=90)
 
+
     # Label to explain the combobox
     lblEscogerCodigo = Label(vFuncion1, text="Seleccione el código de activo a mostrar:", font="Segoe 13", bg="#FFFFFF")
     lblEscogerCodigo.place(x=45, y=45)
+
 
     #Function that fills the combo box with the codes
     def crearListaComboBox():
@@ -46,6 +48,7 @@ def abrirVentana1():
             indice += 1
         return lista
 
+
     #Function that searches the selected code in the rows in the matrix
     def encontrarProducto(codigo):
         archivo = pd.read_html("datos.html")
@@ -57,11 +60,13 @@ def abrirVentana1():
             indice += 1
         return -1
 
+
     # Codes Combo box
     cmbCodigosDisponibles = ttk.Combobox(vFuncion1, values=crearListaComboBox(), state="readonly")
     cmbCodigosDisponibles.grid(column=0, row=1)
     cmbCodigosDisponibles.current(0)
     cmbCodigosDisponibles.place(x=360, y=48)
+
     texto = StringVar()
     texto2 = StringVar()
     texto3 = StringVar()
@@ -70,6 +75,7 @@ def abrirVentana1():
     texto6 = StringVar()
     texto7 = StringVar()
     texto8 = StringVar()
+
     def tratamientoDeDatosLineaRecta():
         archivo = pd.read_html("datos.html")
         cuadroInformacion = archivo[0]
@@ -178,14 +184,19 @@ def abrirVentana1():
     tblDepreciacion.column("col3", width=150, anchor=CENTER)
     tblDepreciacion.column("col4", width=150, anchor=CENTER)
 
+
+    #Determines the useful life of the active
     def determinarVidaUtil(periodoRecuperacion):
         vidaUtil = periodoRecuperacion * (periodoRecuperacion + 1) // 2
         return vidaUtil
 
+
+    # Determines the depreciation amount the active
     def tasaDepreciacion(periodoRecuperacion):
         tasaDepreciacion = 1 / periodoRecuperacion
         return tasaDepreciacion
 
+    #Fills the table with the corresponding depreciation
     def llenarTablaLineaRecta(ano, periodoRecuperacion, valorInicial, valorSalvamento):
         if periodoRecuperacion == 0:
             tblDepreciacion.delete(*tblDepreciacion.get_children())
@@ -198,7 +209,7 @@ def abrirVentana1():
             tblDepreciacion.heading("col3", text="Tasa Depreciación", anchor=CENTER)
             tblDepreciacion.heading("col4", text="Valor en libros", anchor=CENTER)
             tblDepreciacion.place(x=50, y=430)
-            tblDepreciacion.delete(*tblDepreciacion.get_children())  # Borrar datos de tabla
+            tblDepreciacion.delete(*tblDepreciacion.get_children())
             tituloTable.set("Tabla de proyección de depreciación")
             lblTituloTabla.config(fg="#1E56A0")
 
@@ -438,17 +449,18 @@ def abrirVentana2():
     tblDepreciacion.column("col4", width=150, anchor=CENTER)
     tblDepreciacion.column("col5", width=150, anchor=CENTER)
 
-
+    #Determines the useful life of the active
     def determinarVidaUtil(periodoRecuperacion):
         vidaUtil = periodoRecuperacion * (periodoRecuperacion + 1) // 2
         return vidaUtil
 
-
+    # Determines the depreciation base of the active
     def tasaDepreciacion(periodoRecuperacion):
         tasaDepreciacion = 1 / periodoRecuperacion
         return tasaDepreciacion
 
 
+    #Takes the dolar value from the web and transforms it so that it can be converted into float
     def formatearPrecioDolar(precioDolar):
         nuevaVersion = ""
         for i in range(len(precioDolar)):
@@ -459,6 +471,7 @@ def abrirVentana2():
         return float(nuevaVersion)
 
 
+    #Takes the dolar value from the web
     def determinarPrecioDolar():
         urlBanco = 'https://gee.bccr.fi.cr/indicadoreseconomicos/Cuadros/frmVerCatCuadro.aspx?idioma=1&CodCuadro=%20400'
         page = requests.get(urlBanco)
@@ -467,7 +480,7 @@ def abrirVentana2():
         dolar = tipoCambio[89].text
         return formatearPrecioDolar(dolar)
 
-
+    #Fills the table with the corresponding method
     def llenarTablaLineaRecta(ano,periodoRecuperacion,valorInicial,valorSalvamento, moneda):
         if periodoRecuperacion == 0:
             tblDepreciacion.delete(*tblDepreciacion.get_children())
@@ -497,7 +510,7 @@ def abrirVentana2():
             valorMonedaContraria = 0
             while (ano <= int(anoActual)):
                 if valorLibros == valorSalvamento:
-                    while(ano < int(anoActual)-1):
+                    while(ano <= int(anoActual)):
                         tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
                                                                                str(depreciacion),
                                                                                str(round(tasaDepreciacion(
@@ -506,6 +519,7 @@ def abrirVentana2():
                                                                                str("{:,}".format(round(valorMonedaContraria, 2)))))
                         contador += 1
                         ano += 1
+                    break
                 if (moneda == "Colones"):
                     valorMonedaContraria = valorLibros / determinarPrecioDolar()
                 else:
@@ -611,7 +625,7 @@ def abrirVentana3():
 
 
     #Table columns' properties
-    tblDepreciacion = ttk.Treeview(vFuncion3, columns=("col1", "col2", "col3", "col4", "col5","col6", "col7",))
+    tblDepreciacion = ttk.Treeview(vFuncion3, columns=("col1", "col2", "col3", "col4", "col5","col6", "col7"))
     tblDepreciacion.column("#0", width=95, anchor=CENTER)
     tblDepreciacion.column("col1", width=300, anchor=CENTER)
     tblDepreciacion.column("col2", width=90, anchor=CENTER)
