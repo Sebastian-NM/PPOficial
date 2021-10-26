@@ -629,12 +629,12 @@ def abrirVentana3():
     tblDepreciacion.heading("col5", text = "Valor Inicial", anchor=CENTER)
     tblDepreciacion.heading("col6", text = "Valor en libros", anchor=CENTER)
     tblDepreciacion.heading("col7", text = "Periodo de recuperación", anchor=CENTER)
-
     tblDepreciacion.place(x=50, y=135)
 
-
+    #This var helps to determinate which method is being used so that the dollar and colon converter knows what is being shown
     metodoUtilizado = StringVar()
     metodoUtilizado.set("")
+
 
     #Label about choosing the depreciation mode
     lblEscogerDepreciacion = Label(vFuncion3, text = "Seleccione el método de depreciación a mostrar:", font = ("Segoe 13"), bg = "#FFFFFF")
@@ -652,6 +652,7 @@ def abrirVentana3():
         return float(nuevaVersion)
 
 
+    #Determine the dollar price by web
     def determinarPrecioDolar():
         urlBanco = 'https://gee.bccr.fi.cr/indicadoreseconomicos/Cuadros/frmVerCatCuadro.aspx?idioma=1&CodCuadro=%20400'
         page = requests.get(urlBanco)
@@ -661,6 +662,7 @@ def abrirVentana3():
         return formatearPrecioDolar(dolar)
 
 
+    #Determines the useful life
     def determinarVidaUtil(periodoRecuperacion):
         return periodoRecuperacion * (periodoRecuperacion + 1) // 2
 
@@ -742,6 +744,7 @@ def abrirVentana3():
             indice += 1
 
 
+    #Fills the table with the suma de digitos method
     def llenarTablaSumaDigitos():
         metodoUtilizado.set("suma")
         tblDepreciacion.delete(*tblDepreciacion.get_children())
@@ -781,7 +784,10 @@ def abrirVentana3():
                                     bg="#1E56A0", font="Segoe 10 bold",
                                     command = llenarTablaSumaDigitos).place(x=500, y=79)
 
+
+    #This variable saves the radio buttons value
     vrRadioButton = IntVar()
+
 
     def convertirColones():
         if metodoUtilizado.get() == "":
@@ -819,6 +825,7 @@ def abrirVentana3():
                                                                                "₡" + "{:,}".format(round(calculosDepreciacion[1], 2)),
                                                                                periodoRecuperacion))
                 indice += 1
+
 
     def convertirDolares():
         if metodoUtilizado.get() == "":
@@ -862,8 +869,13 @@ def abrirVentana3():
         if vrRadioButton.get() == 2:
             convertirDolares()
 
-    rbColones = Radiobutton(vFuncion3, text = "Conversión a colones", font = "Segoe 10 bold", bg = "#FFFFFF", fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
-    rbDolares = Radiobutton(vFuncion3, text = "Conversión a dólares", font = "Segoe 10 bold",bg = "#FFFFFF",fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 230,y = "380")
+    rbColones = Radiobutton(vFuncion3, text = "Conversión a colones", font = "Segoe 11 bold", bg = "#FFFFFF", fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
+    rbDolares = Radiobutton(vFuncion3, text = "Conversión a dólares", font = "Segoe 11 bold",bg = "#FFFFFF",fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 230,y = "380")
+
+
+
+
+#===============================================================================[CUARTA FUNCION]========================================================================================
 
 def abrirVentana4():
 
@@ -885,55 +897,37 @@ def abrirVentana4():
                            bg = "#1E56A0",font = "Segoe 10 bold",
                            command = vFuncion4.destroy).place(x=50,y=575)
 
-    #Label for title
-    lblNumeroActivo = tkinter.Label(vFuncion4, text="🢂 Reporte general de depreciación", font="Segoe 14", bg="#FFFFFF", fg = "#1E56A0")
-    lblNumeroActivo.place(x=45, y=25)
 
-    #crear combobox de Categoria
+    #Label for title
+    lblNumeroActivo = tkinter.Label(vFuncion4, text="🢂 Reporte de depreciación por categorías", font="Segoe 14", bg="#FFFFFF", fg = "#1E56A0")
+    lblNumeroActivo.place(x=45, y=15)
+
+
+    #Label for choosing the category of the active
+    lblEscogerCategoria=Label(vFuncion4, text="Seleccione la categoría del activo sujeto a depreciación:", font="Segoe 13", bg="#FFFFFF")
+    lblEscogerCategoria.place(x=45, y=70)
+
+
+    #Function that fills the combo box
     def crearListaComboBox():
         archivo=pd.read_html("datos.html")
         cuadroInformacion=archivo[0]
         lista=[]
         indice=1
         while indice<archivo[0].shape[0]:
-            lista.append(cuadroInformacion[1][indice])
-            indice+=1
+            if cuadroInformacion[1][indice] not in lista and cuadroInformacion[1][indice] != "AFTT":
+                lista.append(cuadroInformacion[1][indice])
+            indice += 1
         return lista
 
+
+    #Creating the combo box
     cmbCategoriasDisponibles = ttk.Combobox(vFuncion4, values=crearListaComboBox(), state="readonly")
     cmbCategoriasDisponibles.grid(column=0, row=1)
     cmbCategoriasDisponibles.current(0)
-    cmbCategoriasDisponibles.place(x=360, y=48)
-    texto = StringVar()
-    texto2 = StringVar()
-    texto3 = StringVar()
-    texto4 = StringVar()
-    texto5 = StringVar()
-    texto6 = StringVar()
-    texto7 = StringVar()
-    texto8 = StringVar()
+    cmbCategoriasDisponibles.place(x=470, y=71)
 
-    #label para seleccionar las categorias
-    lblEscogerCategoria=Label(vFuncion4, text="Seleccione la categoria del activo sujeto a depreciacion:", font="Segoe 13", bg="#FFFFFF")
-    lblEscogerCategoria.place(x=40, y=50)
-    showEscogerCategoria=tkinter.Entry(vFuncion4,font="Segoe 12",bg="#E5E5E5", state='disabled', textvariable= texto2, width=40)
-    showEscogerCategoria.place(x=300, y=150)
-
-    #para buscar la categoria
-    def encontrarCategoria(categoria):
-        archivo= read_html("datos.html")
-        indice= 1
-        cuadroInformacion= archivo[1]
-        while(indice< archivo[1].shape[1]):
-            if(cuadroInformacion[1][indice]== categoria):
-                if(cuadroDepreciacion[1][indice]== AFTT):
-                    return "El activo no se deprecia"
-                else:
-                    return indice
-            indice+=1
-        return -1
-
-    #Table columns' properties
+    # Table columns' properties
     tblDepreciacion = ttk.Treeview(vFuncion4, columns=("col1", "col2", "col3", "col4", "col5", "col6", "col7",))
     tblDepreciacion.column("#0", width=95, anchor=CENTER)
     tblDepreciacion.column("col1", width=300, anchor=CENTER)
@@ -953,18 +947,13 @@ def abrirVentana4():
     tblDepreciacion.heading("col6", text="Valor en libros", anchor=CENTER)
     tblDepreciacion.heading("col7", text="Periodo de recuperación", anchor=CENTER)
 
-    tblDepreciacion.place(x=50, y=135)
-
+    tblDepreciacion.place(x=50, y=200)
 
     metodoUtilizado = StringVar()
     metodoUtilizado.set("")
 
-    #Label about choosing the depreciation mode
-    lblEscogerDepreciacion = Label(vFuncion4, text = "Seleccione el método de depreciación a mostrar:", font = ("Segoe 13"), bg = "#FFFFFF")
-    lblEscogerDepreciacion.place(x=45,y=80)
 
-
-    #Takes the dolar value and quits letters and replaces commas for dots
+    # Takes the dolar value and quits letters and replaces commas for dots
     def formatearPrecioDolar(precioDolar):
         nuevaVersion = ""
         for i in range(len(precioDolar)):
@@ -988,27 +977,26 @@ def abrirVentana4():
         return periodoRecuperacion * (periodoRecuperacion + 1) // 2
 
 
-    #Function that provides the lineal depreciation until the actual date
-    def calcularDepreciacionLineal(ano,periodoRecuperacion,valorInicial,valorSalvamento):
+    # Function that provides the lineal depreciation until the actual date
+    def calcularDepreciacionLineal(ano, periodoRecuperacion, valorInicial, valorSalvamento):
         listaResultados = []
         fecha = datetime.today()
         anoActual = int(fecha.strftime("%Y"))
         periodos = 1
         depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
         valorLibros = valorInicial - depreciacion
-        while ano < anoActual-1:
+        while ano < anoActual - 1:
             if periodos == periodoRecuperacion:
                 break
             else:
                 valorLibros = valorLibros - depreciacion
-                ano+=1
+                ano += 1
                 periodos += 1
 
         listaResultados.append(periodos)
         listaResultados.append(valorLibros)
 
         return listaResultados
-
 
     # Function that provides the digits addition depreciation until the actual date
     def calcularDepreciacionSumaDigitos(ano, periodoRecuperacion, costoInicial, valorSalvamento):
@@ -1020,7 +1008,7 @@ def abrirVentana4():
         contadorPeriodo = periodoRecuperacion
         depreciacionAcumulada = 0
         valorLibros = 0
-        while ano <= anoActual-1:
+        while ano <= anoActual - 1:
             if contador == periodoRecuperacion:
                 break
             else:
@@ -1036,8 +1024,7 @@ def abrirVentana4():
 
         return listaResultados
 
-
-    #Function that fills the table given the HTML info and the procedures with linear depreciation
+    # Function that fills the table given the HTML info and the procedures with linear depreciation
     def llenarTablaLineaRecta():
         metodoUtilizado.set("lineal")
         tblDepreciacion.delete(*tblDepreciacion.get_children())
@@ -1045,7 +1032,7 @@ def abrirVentana4():
         cuadroInformacion = archivo[0]
         indice = 1
         while indice < archivo[0].shape[0]:
-            if str(cuadroInformacion[1][indice]) != "AFTT":
+            if str(cuadroInformacion[1][indice]) != "AFTT" and cmbCategoriasDisponibles.get() == str(cuadroInformacion[1][indice]) :
                 numeroActivo = cuadroInformacion[0][indice]
                 categoria = cuadroInformacion[1][indice]
                 nombre = cuadroInformacion[2][indice]
@@ -1054,16 +1041,17 @@ def abrirVentana4():
                 anoCompra = fechaDeCompra[6:]
                 valorSalvamento = cuadroInformacion[6][indice]
                 periodoRecuperacion = cuadroInformacion[7][indice]
-                calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra),int(periodoRecuperacion),int(valorInicial),int(valorSalvamento))
-                tblDepreciacion.insert("", END, text=numeroActivo, values = (nombre,
-                                                                             categoria,
-                                                                             fechaDeCompra,
-                                                                             calculosDepreciacion[0],
-                                                                             "{:,}".format(int(valorInicial)),
-                                                                             "{:,}".format(round(calculosDepreciacion[1],2)),
-                                                                             periodoRecuperacion))
+                calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion),
+                                                                  int(valorInicial), int(valorSalvamento))
+                tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
+                                                                           categoria,
+                                                                           fechaDeCompra,
+                                                                           calculosDepreciacion[0],
+                                                                           "{:,}".format(int(valorInicial)),
+                                                                           "{:,}".format(
+                                                                               round(calculosDepreciacion[1], 2)),
+                                                                           periodoRecuperacion))
             indice += 1
-
 
     def llenarTablaSumaDigitos():
         metodoUtilizado.set("suma")
@@ -1072,7 +1060,7 @@ def abrirVentana4():
         cuadroInformacion = archivo[0]
         indice = 1
         while indice < archivo[0].shape[0]:
-            if str(cuadroInformacion[1][indice]) != "AFTT":
+            if str(cuadroInformacion[1][indice]) != "AFTT" and cmbCategoriasDisponibles.get() == str(cuadroInformacion[1][indice]):
                 numeroActivo = cuadroInformacion[0][indice]
                 categoria = cuadroInformacion[1][indice]
                 nombre = cuadroInformacion[2][indice]
@@ -1082,28 +1070,35 @@ def abrirVentana4():
                 valorSalvamento = cuadroInformacion[6][indice]
                 periodoRecuperacion = cuadroInformacion[7][indice]
                 calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
-                                                                  int(valorInicial), int(valorSalvamento))
+                                                                       int(valorInicial), int(valorSalvamento))
                 tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
                                                                            categoria,
                                                                            fechaDeCompra,
                                                                            calculosDepreciacion[0],
                                                                            "{:,}".format(int(valorInicial)),
-                                                                           "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                           "{:,}".format(
+                                                                               round(calculosDepreciacion[1], 2)),
                                                                            periodoRecuperacion))
             indice += 1
 
 
-    #Linea Recta Button
+    # Label about choosing the depreciation mode
+    lblEscogerDepreciacion = Label(vFuncion4, text="Seleccione el método de depreciación a mostrar:", font=("Segoe 13"),
+                                   bg="#FFFFFF")
+    lblEscogerDepreciacion.place(x=45, y=131)
+
+    # Linea Recta Button
     btnCalcularLineaRecta = Button(vFuncion4, text="LINEAL", fg="#BFCA0A",
                                    bg="#1E56A0", font="Segoe 10 bold",
-                                   command = llenarTablaLineaRecta).place(x=415, y=79)
+                                   command=llenarTablaLineaRecta).place(x=415, y=131)
 
 
-    #Suma Digitos Button
+    # Suma Digitos Button
     btnCalcularSumaDigitos = Button(vFuncion4, text="SUMA DE DÍGITOS", fg="#BFCA0A",
                                     bg="#1E56A0", font="Segoe 10 bold",
-                                    command = llenarTablaSumaDigitos).place(x=500, y=79)
+                                    command=llenarTablaSumaDigitos).place(x=500, y=131)
 
+    # This variable saves the radio buttons value
     vrRadioButton = IntVar()
 
     def convertirColones():
@@ -1115,7 +1110,7 @@ def abrirVentana4():
             cuadroInformacion = archivo[0]
             indice = 1
             while indice < archivo[0].shape[0]:
-                if str(cuadroInformacion[1][indice]) != "AFTT":
+                if str(cuadroInformacion[1][indice]) != "AFTT" and cmbCategoriasDisponibles.get() == str(cuadroInformacion[1][indice]):
                     numeroActivo = cuadroInformacion[0][indice]
                     categoria = cuadroInformacion[1][indice]
                     nombre = cuadroInformacion[2][indice]
@@ -1130,16 +1125,19 @@ def abrirVentana4():
                         valorInicial = int(valorInicial) * determinarPrecioDolar()
                         valorSalvamento = int(valorSalvamento) * determinarPrecioDolar()
                     if metodoUtilizado.get() == "suma":
-                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion), int(valorInicial), int(valorSalvamento))
+                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                               int(valorInicial), int(valorSalvamento))
                     elif metodoUtilizado.get() == "lineal":
-                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion), int(valorInicial),int(valorSalvamento))
+                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion),
+                                                                          int(valorInicial), int(valorSalvamento))
 
                     tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
                                                                                categoria,
                                                                                fechaDeCompra,
                                                                                calculosDepreciacion[0],
                                                                                "₡" + "{:,}".format(int(valorInicial)),
-                                                                               "₡" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                               "₡" + "{:,}".format(
+                                                                                   round(calculosDepreciacion[1], 2)),
                                                                                periodoRecuperacion))
                 indice += 1
 
@@ -1152,7 +1150,7 @@ def abrirVentana4():
             cuadroInformacion = archivo[0]
             indice = 1
             while indice < archivo[0].shape[0]:
-                if str(cuadroInformacion[1][indice]) != "AFTT":
+                if str(cuadroInformacion[1][indice]) != "AFTT" and cmbCategoriasDisponibles.get() == str(cuadroInformacion[1][indice]):
                     numeroActivo = cuadroInformacion[0][indice]
                     categoria = cuadroInformacion[1][indice]
                     nombre = cuadroInformacion[2][indice]
@@ -1167,15 +1165,18 @@ def abrirVentana4():
                         valorInicial = int(valorInicial) / determinarPrecioDolar()
                         valorSalvamento = int(valorSalvamento) / determinarPrecioDolar()
                     if metodoUtilizado.get() == "lineal":
-                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion), int(valorInicial),int(valorSalvamento))
+                        calculosDepreciacion = calcularDepreciacionLineal(int(anoCompra), int(periodoRecuperacion),
+                                                                          int(valorInicial), int(valorSalvamento))
                     elif metodoUtilizado.get() == "suma":
-                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),int(valorInicial), int(valorSalvamento))
+                        calculosDepreciacion = calcularDepreciacionSumaDigitos(int(anoCompra), int(periodoRecuperacion),
+                                                                               int(valorInicial), int(valorSalvamento))
                     tblDepreciacion.insert("", END, text=numeroActivo, values=(nombre,
                                                                                categoria,
                                                                                fechaDeCompra,
                                                                                calculosDepreciacion[0],
                                                                                "$" + "{:,}".format(int(valorInicial)),
-                                                                               "$" + "{:,}".format(round(calculosDepreciacion[1], 2)),
+                                                                               "$" + "{:,}".format(
+                                                                                   round(calculosDepreciacion[1], 2)),
                                                                                periodoRecuperacion))
                 indice += 1
 
@@ -1185,8 +1186,11 @@ def abrirVentana4():
         if vrRadioButton.get() == 2:
             convertirDolares()
 
-    rbColones = Radiobutton(vFuncion4, text = "Conversión a colones", font = "Segoe 10 bold", bg = "#FFFFFF", fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 1).place(x= 45,y = "380")
-    rbDolares = Radiobutton(vFuncion4, text = "Conversión a dólares", font = "Segoe 10 bold",bg = "#FFFFFF",fg = "#C5D50E", variable = vrRadioButton, command=convertirMoneda, value = 2).place(x= 230,y = "380")
+    rbColones = Radiobutton(vFuncion4, text="Conversión a colones", font="Segoe 11 bold", bg="#FFFFFF", fg="#02BA0D",
+                            variable=vrRadioButton, command=convertirMoneda, value=1).place(x=45, y="450")
+    rbDolares = Radiobutton(vFuncion4, text="Conversión a dólares", font="Segoe 11 bold", bg="#FFFFFF", fg="#02BA0D",
+                            variable=vrRadioButton, command=convertirMoneda, value=2).place(x=230, y="450")
+
 
 #===============================================================================[VENTANA PRINCIPAL]========================================================================================
 
@@ -1220,7 +1224,7 @@ def abrirVentanaPrincipal():
     btnFuncion3 = Button(vLogin,text = "Reporte general de depreciación \nacumulada de todos los activos",
                          fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 3, width = 34, command= abrirVentana3).place(x=138,y=370)
     btnFuncion4 = Button(vLogin,text = "Reporte general de proyección de\n depreciación de todos los activos de una\n categoría",
-                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 4, width = 34, command=abrirVentana4).place(x=138,y=480)
+                         fg = "#FFFFFF", bg = "#1E56A0", font = "Segoe 14", height = 4, width = 34, command= abrirVentana4).place(x=138,y=480)
 
 
     #Invocator
