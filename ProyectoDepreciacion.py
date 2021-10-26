@@ -505,20 +505,25 @@ def abrirVentana2():
             lblTituloTabla.config(fg="#1E56A0")
             ano += 1
             contador = 0
-            depreciacion = (valorInicial - valorSalvamento) / periodoRecuperacion
+            depreciacion = round(((valorInicial - valorSalvamento) / periodoRecuperacion),2)
             valorLibros = valorInicial - depreciacion
             valorMonedaContraria = 0
             while (ano <= int(anoActual)):
-                if valorLibros == valorSalvamento:
+                if round(valorLibros) == valorSalvamento:
+                    if (moneda == "Colones"):
+                        valorMonedaContraria = valorLibros / determinarPrecioDolar()
+                    else:
+                        valorMonedaContraria = valorLibros * determinarPrecioDolar()
                     while(ano <= int(anoActual)):
                         tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
                                                                                str(depreciacion),
                                                                                str(round(tasaDepreciacion(
                                                                                    periodoRecuperacion), 2)),
-                                                                               str("{:,}".format(valorLibros)),
+                                                                               str("{:,}".format(round(valorLibros,2))),
                                                                                str("{:,}".format(round(valorMonedaContraria, 2)))))
                         contador += 1
                         ano += 1
+                        depreciacion = 0
                 else:
                     if (moneda == "Colones"):
                         valorMonedaContraria = valorLibros / determinarPrecioDolar()
