@@ -519,20 +519,21 @@ def abrirVentana2():
                                                                                str("{:,}".format(round(valorMonedaContraria, 2)))))
                         contador += 1
                         ano += 1
-                    break
-                if (moneda == "Colones"):
-                    valorMonedaContraria = valorLibros / determinarPrecioDolar()
                 else:
-                    valorMonedaContraria = valorLibros * determinarPrecioDolar()
-                tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
-                                                                       str(depreciacion),
-                                                                       str(round(tasaDepreciacion(periodoRecuperacion), 2)),
-                                                                       str("{:,}".format(valorLibros)),
-                                                                       str("{:,}".format(round(valorMonedaContraria,2)))))
-                valorInicial = valorInicial - depreciacion
-                valorLibros = valorInicial - depreciacion
+                    if (moneda == "Colones"):
+                        valorMonedaContraria = valorLibros / determinarPrecioDolar()
+                    else:
+                        valorMonedaContraria = valorLibros * determinarPrecioDolar()
+                    tblDepreciacion.insert("", END, text=str(ano), values=(str(contador + 1),
+                                                                           str(depreciacion),
+                                                                           str(round(tasaDepreciacion(periodoRecuperacion), 2)),
+                                                                           str("{:,}".format(valorLibros)),
+                                                                           str("{:,}".format(round(valorMonedaContraria,2)))))
+                    valorInicial = valorInicial - depreciacion
+                    valorLibros = valorInicial - depreciacion
                 contador+=1
                 ano +=1
+
 
 
     def llenarTablaSumaDigitos(ano, costoInicial,periodoRecuperacion, valorSalvamento, moneda):
